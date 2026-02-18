@@ -1,0 +1,8 @@
+fastapi
+uvicorn[standard]
+asyncpg
+httpx
+beautifulsoup4
+websockets
+pydantic
+python-dotenv
