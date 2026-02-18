@@ -1,0 +1,9 @@
+fastapi
+uvicorn
+httpx
+beautifulsoup4
+asyncpg
+pydantic
+pillow
+passlib[bcrypt]
+python-multipart
