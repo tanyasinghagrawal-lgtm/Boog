@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SEO Administrator Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap');
+        body { font-family: 'Quicksand', sans-serif; background-color: #f8fafc; }
+        .glass-card { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.2); box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
+        .toast { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); transform: translateY(150%); opacity: 0; }
+        .toast.show { transform: translateY(0); opacity: 1; }
+        /* Custom Scrollbar for Modal */
+        .custom-scroll::-webkit-scrollbar { width: 6px; }
+        .custom-scroll::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 4px; }
+        .custom-scroll::-webkit-scrollbar-thumb { background: #c1c1c1; border-radius: 4px; }
+        .custom-scroll::-webkit-scrollbar-thumb:hover { background: #a8a8a8; }
+        .ai-option:hover { border-color: #22c55e; background-color: #f0fdf4; }
+    </style>
+</head>
+<body class="text-gray-800 antialiased">
+
+    <!-- Login Screen -->
+    <div id="loginScreen" class="min-h-screen flex items-center justify-center p-4">
+        <div class="glass-card p-6 md:p-10 rounded-3xl w-full max-w-md shadow-2xl">
+            <div class="text-center mb-8">
+                <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-shield-alt text-4xl text-green-600"></i>
+                </div>
+                <h1 class="text-3xl font-bold text-gray-900">Admin Login</h1>
+                <p class="text-gray-500 font-medium mt-1">SEO Management Dashboard</p>
+            </div>
+            <form id="loginForm" class="space-y-5">
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-2">Admin ID</label>
+                    <div class="relative">
+                        <i class="fas fa-user absolute left-4 top-3.5 text-gray-400"></i>
+                        <input type="text" id="adminId" class="w-full pl-11 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all outline-none font-medium" placeholder="Enter ID" required>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-2">Password</label>
+                    <div class="relative">
+                        <i class="fas fa-lock absolute left-4 top-3.5 text-gray-400"></i>
+                        <input type="password" id="adminPass" class="w-full pl-11 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all outline-none font-medium" placeholder="••••••••" required>
+                    </div>
+                </div>
+                <button type="submit" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3.5 rounded-xl transition-all shadow-lg shadow-green-200 mt-6 flex items-center justify-center gap-2">
+                    Secure Login <i class="fas fa-arrow-right"></i>
+                </button>
+                <p id="loginError" class="text-red-500 text-sm font-bold text-center hidden mt-4"><i class="fas fa-exclamation-circle"></i> Invalid ID or Password</p>
+            </form>
+        </div>
+    </div>
+
+    <!-- Dashboard Screen -->
+    <div id="dashboardScreen" class="hidden min-h-screen flex flex-col bg-gray-50">
+        <!-- Header -->
+        <header class="bg-white shadow-sm sticky top-0 z-40 border-b border-gray-200">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col md:flex-row justify-between items-center gap-4">
+                <div class="flex items-center gap-3 w-full md:w-auto justify-center md:justify-start">
+                    <div class="bg-green-100 p-2 rounded-lg"><i class="fas fa-leaf text-green-600 text-xl"></i></div>
+                    <h1 class="text-2xl font-bold text-gray-900">SEO Center</h1>
+                </div>
+                
+                <!-- AI Model Selector (Client Side) -->
+                <div class="flex items-center gap-3 w-full md:w-auto justify-center md:justify-end bg-gray-100 p-1.5 rounded-xl">
+                    <span class="text-xs font-bold text-gray-500 ml-2 uppercase tracking-wide"><i class="fas fa-brain"></i> AI Engine:</span>
+                    <select id="aiModelSelect" class="bg-white border-none rounded-lg py-1.5 px-3 text-sm font-bold text-gray-800 shadow-sm outline-none cursor-pointer focus:ring-2 focus:ring-green-500">
+                        <option value="gemini-2.5-flash">Gemini 2.5 Flash</option>
+                        <option value="gemini-3-flash-preview" selected>Gemini 3.0 Flash</option>
+                    </select>
+                </div>
+                
+                <button onclick="logout()" class="hidden md:flex text-gray-500 hover:text-red-600 font-bold text-sm items-center gap-2 transition-colors bg-gray-100 hover:bg-red-50 py-2 px-4 rounded-lg">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+            <div class="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
+                <h2 class="text-xl md:text-2xl font-bold text-gray-800 w-full md:w-auto">Manage Articles <span id="articleCount" class="text-sm font-semibold bg-green-100 text-green-700 px-2 py-1 rounded-full ml-2">0</span></h2>
+                <div class="relative w-full md:w-96">
+                    <i class="fas fa-search absolute left-4 top-3.5 text-gray-400"></i>
+                    <input type="text" id="searchInput" placeholder="Search by title or slug..." class="w-full pl-11 pr-4 py-3 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-500 focus:outline-none shadow-sm font-medium transition-all" onkeyup="filterBlogs()">
+                </div>
+            </div>
+
+            <!-- Loader -->
+            <div id="dashboardLoader" class="flex flex-col justify-center items-center py-32">
+                <i class="fas fa-circle-notch fa-spin text-5xl text-green-500 mb-4"></i>
+                <p class="text-gray-500 font-semibold">Loading your articles...</p>
+            </div>
+
+            <!-- Blog List -->
+            <div id="blogList" class="grid grid-cols-1 lg:grid-cols-2 gap-6 hidden">
+                <!-- Blogs will be injected here via JS -->
+            </div>
+            
+            <button onclick="logout()" class="md:hidden w-full mt-8 text-red-600 font-bold text-sm flex items-center justify-center gap-2 bg-red-50 py-3 rounded-xl border border-red-100">
+                <i class="fas fa-sign-out-alt"></i> Secure Logout
+            </button>
+        </main>
+    </div>
+
+    <!-- AI Generator Modal -->
+    <div id="aiModal" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-gray-900/60 backdrop-blur-sm p-4">
+        <div class="bg-white w-full max-w-4xl rounded-2xl shadow-2xl flex flex-col max-h-[90vh] transform transition-all overflow-hidden border border-gray-200">
+            <!-- Modal Header -->
+            <div class="bg-gradient-to-r from-gray-900 to-gray-800 p-5 flex justify-between items-center">
+                <h3 class="text-white font-bold text-lg flex items-center gap-2">
+                    <i class="fas fa-magic text-yellow-400"></i> AI Generated Options
+                </h3>
+                <button onclick="closeAiModal()" class="text-gray-400 hover:text-white transition-colors">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+            
+            <!-- Loading State -->
+            <div id="aiLoading" class="flex flex-col items-center justify-center py-20 px-4 flex-1 bg-gray-50">
+                <div class="relative w-20 h-20 mb-6">
+                    <div class="absolute inset-0 border-4 border-gray-200 rounded-full"></div>
+                    <div class="absolute inset-0 border-4 border-green-500 rounded-full border-t-transparent animate-spin"></div>
+                    <i class="fas fa-brain absolute inset-0 flex items-center justify-center text-2xl text-green-500 animate-pulse"></i>
+                </div>
+                <h4 class="text-xl font-bold text-gray-800 mb-2">Analyzing Blog Content</h4>
+                <p class="text-gray-500 text-center font-medium max-w-md">Gemini is reading the article and generating 10 highly optimized SEO titles and descriptions...</p>
+            </div>
+
+            <!-- Results State -->
+            <div id="aiResults" class="hidden flex-col md:flex-row flex-1 overflow-hidden">
+                <!-- Titles Column -->
+                <div class="w-full md:w-1/2 border-b md:border-b-0 md:border-r border-gray-200 flex flex-col h-[40vh] md:h-full">
+                    <div class="bg-gray-50 p-3 border-b border-gray-200 font-bold text-gray-700 flex justify-between items-center">
+                        <span><i class="fas fa-heading text-blue-500 mr-2"></i> Select a Title</span>
+                        <span class="text-xs bg-gray-200 px-2 py-1 rounded-md">Max 60 chars</span>
+                    </div>
+                    <div id="aiTitlesList" class="flex-1 overflow-y-auto p-3 space-y-3 custom-scroll bg-white">
+                        <!-- Titles Go Here -->
+                    </div>
+                </div>
+                <!-- Descriptions Column -->
+                <div class="w-full md:w-1/2 flex flex-col h-[40vh] md:h-full">
+                    <div class="bg-gray-50 p-3 border-b border-gray-200 font-bold text-gray-700 flex justify-between items-center">
+                        <span><i class="fas fa-align-left text-purple-500 mr-2"></i> Select a Description</span>
+                        <span class="text-xs bg-gray-200 px-2 py-1 rounded-md">130-155 chars</span>
+                    </div>
+                    <div id="aiDescsList" class="flex-1 overflow-y-auto p-3 space-y-3 custom-scroll bg-white">
+                        <!-- Descriptions Go Here -->
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Modal Footer -->
+            <div class="bg-gray-50 p-4 border-t border-gray-200 flex justify-end gap-3 hidden" id="aiModalFooter">
+                <button onclick="closeAiModal()" class="px-5 py-2 rounded-lg font-bold text-gray-600 bg-white border border-gray-300 hover:bg-gray-100 transition-colors">Cancel</button>
+                <button onclick="applyAiSelections()" class="px-6 py-2 rounded-lg font-bold text-white bg-green-600 hover:bg-green-700 shadow-lg shadow-green-200 transition-colors flex items-center gap-2">
+                    <i class="fas fa-check"></i> Apply Selected
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast fixed bottom-6 right-6 bg-gray-900 text-white px-6 py-4 rounded-xl shadow-2xl flex items-center gap-3 z-[100] border border-gray-700">
+        <div class="bg-green-500 text-white rounded-full w-8 h-8 flex items-center justify-center">
+            <i class="fas fa-check text-sm"></i>
+        </div>
+        <span id="toastMsg" class="font-bold">Database & Cache Updated!</span>
+    </div>
+
+    <script>
+        // --- 1. CONFIGURATION & AI KEYS (BASE64) ---
+        // Ye encoded format me hain taaki bots easily scan na karein
+        const ENCODED_KEYS = [
+            "QUl6YVN5QnpWU1RHdzR0QlplREhUcksxWHAzOGVfd3FOaGJqdm53",
+            "QUl6YVN5RDVYS01pVXFpQ0hKMzM1eFZzZ05NdWVBaXFOQk9rSFVN"
+        ];
+        
+        // Run time pe JS inko decode kar lega
+        const GEMINI_KEYS = ENCODED_KEYS.map(k => atob(k));
+        let currentKeyIndex = 0;
+
+        // --- 2. GLOBAL STATE ---
+        const loginScreen = document.getElementById('loginScreen');
+        const dashboardScreen = document.getElementById('dashboardScreen');
+        const loginForm = document.getElementById('loginForm');
+        const loginError = document.getElementById('loginError');
+        const blogList = document.getElementById('blogList');
+        const dashboardLoader = document.getElementById('dashboardLoader');
+        const aiModal = document.getElementById('aiModal');
+        
+        let allBlogs = [];
+        let currentEditingSlug = null;
+        let selectedAiTitle = null;
+        let selectedAiDesc = null;
+
+        // --- 3. INITIALIZATION ---
+        window.onload = () => {
+            const savedId = localStorage.getItem('adminId');
+            const savedPass = localStorage.getItem('adminPass');
+            if (savedId && savedPass) {
+                showDashboard(savedId, savedPass);
+            }
+        };
+
+        // --- 4. AUTH LOGIC ---
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const id = document.getElementById('adminId').value;
+            const pass = document.getElementById('adminPass').value;
+            const btn = e.target.querySelector('button');
+            const ogHtml = btn.innerHTML;
+            
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Authenticating...';
+            
+            try {
+                const res = await fetch('/admin/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username: id, password: pass })
+                });
+
+                if (res.ok) {
+                    localStorage.setItem('adminId', id);
+                    localStorage.setItem('adminPass', pass);
+                    showDashboard(id, pass);
+                } else {
+                    loginError.classList.remove('hidden');
+                }
+            } catch (err) {
+                loginError.innerHTML = '<i class="fas fa-wifi"></i> Network Error';
+                loginError.classList.remove('hidden');
+            } finally {
+                btn.innerHTML = ogHtml;
+            }
+        });
+
+        function logout() {
+            localStorage.removeItem('adminId');
+            localStorage.removeItem('adminPass');
+            dashboardScreen.classList.add('hidden');
+            loginScreen.classList.remove('hidden');
+            document.getElementById('adminPass').value = '';
+        }
+
+        async function showDashboard(id, pass) {
+            loginScreen.classList.add('hidden');
+            dashboardScreen.classList.remove('hidden');
+            blogList.classList.add('hidden');
+            dashboardLoader.classList.remove('hidden');
+
+            try {
+                const res = await fetch('/admin/blogs', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username: id, password: pass })
+                });
+
+                if (res.status === 401) { logout(); return; }
+
+                const data = await res.json();
+                allBlogs = data.blogs;
+                document.getElementById('articleCount').innerText = allBlogs.length;
+                renderBlogs(allBlogs);
+            } catch (err) {
+                alert("Failed to load blogs from server.");
+                logout();
+            }
+        }
+
+        // --- 5. RENDER UI ---
+        function renderBlogs(blogs) {
+            dashboardLoader.classList.add('hidden');
+            blogList.classList.remove('hidden');
+            blogList.innerHTML = '';
+
+            if (blogs.length === 0) {
+                blogList.innerHTML = '<div class="col-span-full text-center py-20 bg-white rounded-xl border border-dashed border-gray-300"><i class="fas fa-folder-open text-4xl text-gray-300 mb-3"></i><p class="text-gray-500 font-bold">No articles found.</p></div>';
+                return;
+            }
+
+            blogs.forEach(blog => {
+                const cleanDesc = blog.seo_description ? blog.seo_description.replace(/"/g, '&quot;') : '';
+                const cleanTitle = blog.seo_title ? blog.seo_title.replace(/"/g, '&quot;') : '';
+                
+                const card = document.createElement('div');
+                card.className = "bg-white rounded-2xl shadow-sm hover:shadow-md border border-gray-200 overflow-hidden transition-all duration-300 flex flex-col";
+                card.innerHTML = `
+                    <div class="p-5 border-b border-gray-100 bg-gray-50/50 flex flex-col gap-2">
+                        <div class="flex justify-between items-start gap-2">
+                            <h3 class="text-lg font-bold text-gray-900 leading-tight">${blog.title}</h3>
+                        </div>
+                        <a href="/${blog.wp_slug}" target="_blank" class="text-xs font-bold text-blue-600 bg-blue-50 hover:bg-blue-100 px-2.5 py-1 rounded-md w-fit transition-colors">
+                            <i class="fas fa-external-link-alt mr-1"></i> /${blog.wp_slug}
+                        </a>
+                    </div>
+                    
+                    <div class="p-5 space-y-4 flex-1">
+                        <div>
+                            <div class="flex justify-between mb-1.5">
+                                <label class="text-xs font-bold text-gray-700 uppercase tracking-wide">SEO Title</label>
+                                <span class="text-[10px] font-bold text-gray-400 bg-gray-100 px-1.5 py-0.5 rounded">Max 60 chars</span>
+                            </div>
+                            <input type="text" id="title-${blog.wp_slug}" value="${cleanTitle}" class="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-500 focus:bg-white outline-none text-sm font-medium transition-all text-gray-800">
+                        </div>
+                        <div>
+                            <div class="flex justify-between mb-1.5">
+                                <label class="text-xs font-bold text-gray-700 uppercase tracking-wide">Meta Description</label>
+                                <span class="text-[10px] font-bold text-gray-400 bg-gray-100 px-1.5 py-0.5 rounded">130-155 chars</span>
+                            </div>
+                            <textarea id="desc-${blog.wp_slug}" rows="3" class="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-500 focus:bg-white outline-none text-sm font-medium transition-all resize-none text-gray-800 leading-relaxed">${cleanDesc}</textarea>
+                        </div>
+                    </div>
+                    
+                    <div class="p-4 border-t border-gray-100 bg-gray-50 flex justify-between gap-3">
+                        <button onclick="openAiGenerator('${blog.wp_slug}')" class="flex-1 bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white py-2.5 rounded-xl text-sm font-bold transition-all shadow-md shadow-purple-200 flex items-center justify-center gap-2">
+                            <i class="fas fa-magic"></i> AI Generate
+                        </button>
+                        <button onclick="updateSEO('${blog.wp_slug}')" id="btn-${blog.wp_slug}" class="flex-1 bg-gray-900 hover:bg-green-600 text-white py-2.5 rounded-xl text-sm font-bold transition-all shadow-md flex items-center justify-center gap-2">
+                            <i class="fas fa-save"></i> Save DB
+                        </button>
+                    </div>
+                `;
+                blogList.appendChild(card);
+            });
+        }
+
+        function filterBlogs() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            const filtered = allBlogs.filter(b => 
+                b.title.toLowerCase().includes(query) || 
+                b.wp_slug.toLowerCase().includes(query)
+            );
+            renderBlogs(filtered);
+        }
+
+        // --- 6. AI GENERATION LOGIC (CLIENT SIDE) ---
+        async function openAiGenerator(wp_slug) {
+            currentEditingSlug = wp_slug;
+            selectedAiTitle = null;
+            selectedAiDesc = null;
+            
+            // UI Reset
+            document.getElementById('aiResults').classList.add('hidden');
+            document.getElementById('aiModalFooter').classList.add('hidden');
+            document.getElementById('aiLoading').classList.remove('hidden');
+            aiModal.classList.remove('hidden');
+            
+            const id = localStorage.getItem('adminId');
+            const pass = localStorage.getItem('adminPass');
+
+            try {
+                // 1. Fetch Blog Text from Backend
+                const textRes = await fetch('/admin/blog-text', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username: id, password: pass, wp_slug: wp_slug })
+                });
+                
+                if(!textRes.ok) throw new Error("Could not fetch blog text.");
+                const textData = await textRes.json();
+                const blogText = textData.text;
+
+                // 2. Call Gemini API Directly from Browser
+                const selectedModel = document.getElementById('aiModelSelect').value;
+                const prompt = `You are a world-class SEO expert. Read the following blog text and generate EXACTLY 10 highly engaging SEO Titles (under 60 characters) and 10 SEO Meta Descriptions (between 130-155 characters naturally).
+                CRITICAL RULES:
+                1. Output ONLY a valid JSON object. Absolutely NO conversational text.
+                2. DO NOT wrap the JSON in markdown blocks (no \`\`\`json). Just the raw object { ... }.
+                3. The output MUST follow this exact JSON schema:
+                {
+                    "titles": ["title 1", "title 2", "title 3", "title 4", "title 5", "title 6", "title 7", "title 8", "title 9", "title 10"],
+                    "descriptions": ["desc 1", "desc 2", "desc 3", "desc 4", "desc 5", "desc 6", "desc 7", "desc 8", "desc 9", "desc 10"]
+                }
+                
+                Blog Text:
+                ${blogText}`;
+
+                const apiKey = GEMINI_KEYS[currentKeyIndex];
+                const url = `https://generativelanguage.googleapis.com/v1beta/models/${selectedModel}:generateContent?key=${apiKey}`;
+                
+                const geminiRes = await fetch(url, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        contents: [{ parts: [{ text: prompt }] }],
+                        generationConfig: {
+                            temperature: 0.0, // Strict, deterministic output
+                            responseMimeType: "application/json"
+                        }
+                    })
+                });
+
+                if(!geminiRes.ok) throw new Error("Gemini API Error");
+                
+                const aiData = await geminiRes.json();
+                const rawJsonStr = aiData.candidates[0].content.parts[0].text.trim();
+                
+                // Parse JSON
+                let parsed;
+                try {
+                    parsed = JSON.parse(rawJsonStr);
+                } catch(e) {
+                    // Fail-safe regex parse
+                    const match = rawJsonStr.match(/\{[\s\S]*\}/);
+                    parsed = JSON.parse(match[0]);
+                }
+
+                populateAiLists(parsed.titles, parsed.descriptions);
+
+            } catch (err) {
+                console.error(err);
+                alert("Error generating AI content. Switching API key fallback...");
+                currentKeyIndex = (currentKeyIndex + 1) % GEMINI_KEYS.length; // Key rotate
+                closeAiModal();
+            }
+        }
+
+        function populateAiLists(titles, descriptions) {
+            const tList = document.getElementById('aiTitlesList');
+            const dList = document.getElementById('aiDescsList');
+            tList.innerHTML = ''; dList.innerHTML = '';
+
+            titles.forEach((t, index) => {
+                const el = document.createElement('div');
+                el.className = "ai-option p-3 rounded-xl border-2 border-transparent bg-gray-50 cursor-pointer transition-all flex gap-3 group";
+                el.innerHTML = `<div class="font-bold text-gray-400 group-hover:text-green-500">${index+1}.</div><div class="text-sm font-semibold text-gray-800">${t}</div>`;
+                el.onclick = () => {
+                    document.querySelectorAll('#aiTitlesList .ai-option').forEach(n => {
+                        n.classList.remove('border-green-500', 'bg-green-50');
+                        n.classList.add('border-transparent', 'bg-gray-50');
+                    });
+                    el.classList.remove('border-transparent', 'bg-gray-50');
+                    el.classList.add('border-green-500', 'bg-green-50');
+                    selectedAiTitle = t;
+                };
+                tList.appendChild(el);
+            });
+
+            descriptions.forEach((d, index) => {
+                const el = document.createElement('div');
+                el.className = "ai-option p-3 rounded-xl border-2 border-transparent bg-gray-50 cursor-pointer transition-all flex gap-3 group";
+                el.innerHTML = `<div class="font-bold text-gray-400 group-hover:text-green-500">${index+1}.</div><div class="text-sm font-medium text-gray-800 leading-relaxed">${d}</div>`;
+                el.onclick = () => {
+                    document.querySelectorAll('#aiDescsList .ai-option').forEach(n => {
+                        n.classList.remove('border-green-500', 'bg-green-50');
+                        n.classList.add('border-transparent', 'bg-gray-50');
+                    });
+                    el.classList.remove('border-transparent', 'bg-gray-50');
+                    el.classList.add('border-green-500', 'bg-green-50');
+                    selectedAiDesc = d;
+                };
+                dList.appendChild(el);
+            });
+
+            // Switch UI views
+            document.getElementById('aiLoading').classList.add('hidden');
+            document.getElementById('aiResults').classList.remove('hidden');
+            document.getElementById('aiModalFooter').classList.remove('hidden');
+        }
+
+        function closeAiModal() {
+            aiModal.classList.add('hidden');
+        }
+
+        function applyAiSelections() {
+            if(selectedAiTitle) document.getElementById(`title-${currentEditingSlug}`).value = selectedAiTitle;
+            if(selectedAiDesc) document.getElementById(`desc-${currentEditingSlug}`).value = selectedAiDesc;
+            closeAiModal();
+            // Automatically trigger save highlight
+            const btn = document.getElementById(`btn-${currentEditingSlug}`);
+            btn.classList.add('ring-4', 'ring-green-300', 'bg-green-600');
+            setTimeout(() => btn.classList.remove('ring-4', 'ring-green-300', 'bg-green-600'), 1000);
+        }
+
+        // --- 7. SAVE TO BACKEND DB ---
+        async function updateSEO(wp_slug) {
+            const newTitle = document.getElementById(`title-${wp_slug}`).value.trim();
+            const newDesc = document.getElementById(`desc-${wp_slug}`).value.trim();
+            const btn = document.getElementById(`btn-${wp_slug}`);
+            const ogHtml = btn.innerHTML;
+
+            const id = localStorage.getItem('adminId');
+            const pass = localStorage.getItem('adminPass');
+
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+            btn.disabled = true;
+
+            try {
+                const res = await fetch('/admin/update-seo', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        wp_slug: wp_slug,
+                        seo_title: newTitle,
+                        seo_description: newDesc,
+                        username: id,
+                        password: pass
+                    })
+                });
+
+                if (res.ok) {
+                    showToast();
+                    const blogIndex = allBlogs.findIndex(b => b.wp_slug === wp_slug);
+                    if(blogIndex > -1) {
+                        allBlogs[blogIndex].seo_title = newTitle;
+                        allBlogs[blogIndex].seo_description = newDesc;
+                    }
+                    btn.classList.replace('bg-gray-900', 'bg-green-600');
+                    setTimeout(() => btn.classList.replace('bg-green-600', 'bg-gray-900'), 2000);
+                } else {
+                    if(res.status === 401) logout();
+                    else alert("Failed to save. Try again.");
+                }
+            } catch (err) {
+                alert("Network error.");
+            } finally {
+                btn.innerHTML = ogHtml;
+                btn.disabled = false;
+            }
+        }
+
+        function showToast() {
+            const toast = document.getElementById('toast');
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+    </script>
+</body>
+</html>
