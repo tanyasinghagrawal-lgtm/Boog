@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Workspace | Pranav Blog</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts (Apple Style) -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: #f5f5f7;
+            margin: 0;
+            min-height: 100vh;
+            overflow-x: hidden;
+            color: #1d1d1f;
+        }
+
+        /* --- LIQUID / MESH BACKGROUND --- */
+        .liquid-bg {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            z-index: -1;
+            background: radial-gradient(at 0% 0%, hsla(253,16%,7%,1) 0, transparent 50%), 
+                        radial-gradient(at 50% 0%, hsla(225,39%,30%,1) 0, transparent 50%), 
+                        radial-gradient(at 100% 0%, hsla(339,49%,30%,1) 0, transparent 50%);
+            background-color: #f2f2f7;
+            overflow: hidden;
+        }
+
+        .blob {
+            position: absolute;
+            filter: blur(70px);
+            opacity: 0.6;
+            animation: float 20s infinite alternate ease-in-out;
+            border-radius: 50%;
+        }
+
+        .blob-1 { width: 400px; height: 400px; background: #ff9a9e; top: -100px; left: -100px; }
+        .blob-2 { width: 500px; height: 500px; background: #fecfef; bottom: -150px; right: -100px; animation-delay: -5s; }
+        .blob-3 { width: 350px; height: 350px; background: #a18cd1; top: 30%; left: 40%; animation-delay: -10s; }
+
+        @keyframes float {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(150px, 100px) scale(1.2); }
+        }
+
+        /* --- APPLE GLASSMORPHISM UI --- */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.65);
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+            border-radius: 24px;
+        }
+        
+        .glass-card {
+            background: rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            border-radius: 16px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .glass-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.06);
+        }
+
+        .glass-input {
+            background: rgba(255, 255, 255, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            border-radius: 12px;
+            padding: 12px 16px;
+            width: 100%;
+            outline: none;
+            transition: all 0.3s ease;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
+        }
+        .glass-input:focus {
+            background: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 0 0 4px rgba(10, 132, 255, 0.2);
+            border-color: #0a84ff;
+        }
+
+        /* --- BUTTONS --- */
+        .btn-apple {
+            background: #0071e3;
+            color: white;
+            border-radius: 980px; /* Pill shape */
+            padding: 10px 24px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            box-shadow: 0 4px 14px rgba(0, 113, 227, 0.3);
+        }
+        .btn-apple:hover { background: #0077ED; transform: scale(1.02); }
+        .btn-apple:active { transform: scale(0.98); }
+
+        .btn-danger {
+            background: rgba(255, 59, 48, 0.1);
+            color: #ff3b30;
+            border: 1px solid rgba(255, 59, 48, 0.2);
+        }
+        .btn-danger:hover { background: #ff3b30; color: white; }
+
+        .btn-success { background: #34c759; box-shadow: 0 4px 14px rgba(52, 199, 89, 0.3); }
+        .btn-success:hover { background: #32d74b; }
+
+        /* --- APPLE TOGGLE SWITCH --- */
+        .apple-switch {
+            position: relative; width: 50px; height: 30px; display: inline-block;
+        }
+        .apple-switch input { opacity: 0; width: 0; height: 0; }
+        .slider {
+            position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0;
+            background-color: #e5e5ea; transition: .4s; border-radius: 30px;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .slider:before {
+            position: absolute; content: ""; height: 26px; width: 26px;
+            left: 2px; bottom: 2px; background-color: white; transition: .4s;
+            border-radius: 50%; box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        input:checked + .slider { background-color: #34c759; }
+        input:checked + .slider:before { transform: translateX(20px); }
+
+        /* Loader */
+        .spinner {
+            border: 3px solid rgba(255,255,255,0.3); border-radius: 50%;
+            border-top: 3px solid white; width: 20px; height: 20px;
+            animation: spin 1s linear infinite; display: inline-block;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.2); border-radius: 10px; }
+    </style>
+</head>
+<body>
+
+    <!-- Liquid Animated Background -->
+    <div class="liquid-bg">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
+    </div>
+
+    <!-- ==================== LOGIN SCREEN ==================== -->
+    <div id="login-screen" class="min-h-screen flex items-center justify-center p-4">
+        <div class="glass-panel p-10 w-full max-w-md text-center transform transition-all">
+            <div class="w-16 h-16 bg-gradient-to-tr from-blue-500 to-purple-500 rounded-2xl mx-auto flex items-center justify-center mb-6 shadow-lg">
+                <i class="fas fa-lock text-white text-2xl"></i>
+            </div>
+            <h2 class="text-3xl font-semibold mb-2 tracking-tight">Admin Workspace</h2>
+            <p class="text-gray-500 mb-8 text-sm">Sign in securely to manage your blog.</p>
+            
+            <form id="login-form" class="space-y-5 text-left">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1 ml-1">Admin ID</label>
+                    <input type="text" id="admin-id" required class="glass-input" placeholder="Enter username">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1 ml-1">Password</label>
+                    <input type="password" id="admin-pass" required class="glass-input" placeholder="••••••••">
+                </div>
+                <button type="submit" id="login-btn" class="btn-apple w-full mt-6 py-3 text-lg">
+                    <span>Authenticate</span>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- ==================== DASHBOARD SCREEN ==================== -->
+    <div id="dashboard-screen" class="hidden min-h-screen flex flex-col p-4 md:p-8 max-w-7xl mx-auto">
+        
+        <!-- Header -->
+        <header class="glass-panel px-6 py-4 mb-8 flex justify-between items-center">
+            <div class="flex items-center gap-4">
+                <div class="w-10 h-10 bg-black rounded-xl flex items-center justify-center shadow-md">
+                    <i class="fas fa-pen-nib text-white"></i>
+                </div>
+                <h1 class="text-2xl font-semibold tracking-tight">Workspace</h1>
+            </div>
+            <button onclick="logout()" class="btn-apple bg-gray-200 !text-gray-800 hover:!bg-gray-300 shadow-none">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </button>
+        </header>
+
+        <!-- Main Content Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+            
+            <!-- LEFT COL: ADD POST -->
+            <div class="lg:col-span-1 space-y-6">
+                <div class="glass-panel p-6">
+                    <h3 class="text-lg font-semibold mb-4 flex items-center gap-2">
+                        <i class="fas fa-plus-circle text-blue-500"></i> Publish New Entry
+                    </h3>
+                    
+                    <form id="add-post-form" class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1 ml-1">WordPress URL</label>
+                            <input type="url" id="wp-url" required class="glass-input" placeholder="https://domain.com/post-name/">
+                        </div>
+                        
+                        <div class="flex items-center justify-between bg-white bg-opacity-40 p-4 rounded-xl border border-white border-opacity-60">
+                            <div>
+                                <p class="font-medium text-sm">Post as Old Date?</p>
+                                <p class="text-xs text-gray-500">Fetch original publish date</p>
+                            </div>
+                            <label class="apple-switch">
+                                <input type="checkbox" id="is-old-post">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+
+                        <button type="submit" id="add-btn" class="btn-apple w-full py-3">
+                            <i class="fas fa-cloud-download-alt"></i> Fetch & Generate Preview
+                        </button>
+                    </form>
+                </div>
+
+                <!-- VERIFY MODAL (Appears after fetching) -->
+                <div id="verify-box" class="glass-panel p-6 hidden border-blue-400 border-2 transform scale-95 transition-all">
+                    <div class="text-center mb-4">
+                        <div class="w-12 h-12 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-2">
+                            <i class="fas fa-eye text-xl"></i>
+                        </div>
+                        <h4 class="font-semibold text-lg">Preview Ready!</h4>
+                        <p class="text-sm text-gray-500">Check the design before verifying.</p>
+                    </div>
+                    
+                    <a id="preview-link" href="#" target="_blank" class="btn-apple bg-gray-800 w-full mb-3 shadow-md justify-center">
+                        Open Preview Tab <i class="fas fa-external-link-alt ml-1"></i>
+                    </a>
+                    
+                    <button onclick="verifyPost()" id="verify-btn" class="btn-apple btn-success w-full justify-center text-lg shadow-lg">
+                        <i class="fas fa-check-circle"></i> Verify & Process AI
+                    </button>
+                    <p class="text-xs text-center text-gray-400 mt-3">Verifying will generate AI Summary, Vectors & SEO.</p>
+                </div>
+            </div>
+
+            <!-- RIGHT COL: MANAGE POSTS -->
+            <div class="lg:col-span-2 glass-panel p-6 min-h-[600px] flex flex-col">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-lg font-semibold flex items-center gap-2">
+                        <i class="fas fa-layer-group text-purple-500"></i> Manage Articles
+                    </h3>
+                    <button onclick="loadBlogs()" class="text-gray-500 hover:text-blue-500 transition-colors bg-white bg-opacity-50 p-2 rounded-full w-8 h-8 flex items-center justify-center">
+                        <i class="fas fa-sync-alt"></i>
+                    </button>
+                </div>
+                
+                <div class="relative mb-4">
+                    <i class="fas fa-search absolute left-4 top-3.5 text-gray-400"></i>
+                    <input type="text" id="search-blog" onkeyup="filterBlogs()" class="glass-input pl-10" placeholder="Search by title or slug...">
+                </div>
+
+                <!-- Blog List Container -->
+                <div id="blog-list" class="space-y-4 overflow-y-auto pr-2 flex-grow max-h-[600px]">
+                    <!-- Loading state -->
+                    <div class="text-center text-gray-500 py-10">
+                        <div class="spinner border-gray-400 border-t-gray-800 mb-3"></div>
+                        <p>Loading your articles...</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- NOTIFICATION TOAST -->
+    <div id="toast" class="fixed bottom-5 right-5 glass-panel px-6 py-4 flex items-center gap-3 transform translate-y-20 opacity-0 transition-all duration-300 z-50">
+        <i id="toast-icon" class="fas fa-info-circle text-blue-500 text-xl"></i>
+        <span id="toast-msg" class="font-medium text-sm">Action completed!</span>
+    </div>
+
+    <!-- APP LOGIC -->
+    <script>
+        // API Base URL (Assuming HTML is hosted on the same server, empty string works. 
+        // If external, put full URL like 'https://blog.pranavblog.online')
+        const API_BASE = ""; 
+        
+        let currentTempSlug = ""; // Store slug pending verification
+        let allBlogsData = []; // Cache for search
+
+        // Elements
+        const loginScreen = document.getElementById('login-screen');
+        const dashboardScreen = document.getElementById('dashboard-screen');
+        const verifyBox = document.getElementById('verify-box');
+        const blogListEl = document.getElementById('blog-list');
+
+        // Check Auth on Load
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedId = localStorage.getItem("adminId");
+            const savedPass = localStorage.getItem("adminPass");
+            if (savedId && savedPass) {
+                showDashboard();
+            }
+        });
+
+        // ================= AUTHENTICATION =================
+        document.getElementById('login-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const id = document.getElementById('admin-id').value;
+            const pass = document.getElementById('admin-pass').value;
+            const btn = document.getElementById('login-btn');
+            
+            btn.innerHTML = '<div class="spinner"></div>';
+            
+            try {
+                const res = await fetch(`${API_BASE}/admin/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username: id, password: pass })
+                });
+
+                if (res.ok) {
+                    localStorage.setItem("adminId", id);
+                    localStorage.setItem("adminPass", pass);
+                    showToast("Login successful!", "success");
+                    showDashboard();
+                } else {
+                    showToast("Invalid credentials!", "error");
+                }
+            } catch (err) {
+                showToast("Network error. Server might be down.", "error");
+            } finally {
+                btn.innerHTML = '<span>Authenticate</span>';
+            }
+        });
+
+        function logout() {
+            localStorage.removeItem("adminId");
+            localStorage.removeItem("adminPass");
+            dashboardScreen.classList.add('hidden');
+            loginScreen.classList.remove('hidden');
+            showToast("Logged out successfully.", "info");
+        }
+
+        function showDashboard() {
+            loginScreen.classList.add('hidden');
+            dashboardScreen.classList.remove('hidden');
+            dashboardScreen.classList.add('animate-fade-in');
+            loadBlogs();
+        }
+
+        // ================= ADD & VERIFY POST =================
+        document.getElementById('add-post-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const url = document.getElementById('wp-url').value;
+            const isOld = document.getElementById('is-old-post').checked;
+            const btn = document.getElementById('add-btn');
+            
+            btn.innerHTML = '<div class="spinner"></div> Fetching...';
+            btn.disabled = true;
+
+            const creds = getCreds();
+            
+            try {
+                const res = await fetch(`${API_BASE}/admin/add-post`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ ...creds, url: url, is_old_post: isOld })
+                });
+                
+                const data = await res.json();
+                
+                if (res.ok) {
+                    showToast("Draft fetched! Check preview.", "success");
+                    currentTempSlug = data.wp_slug;
+                    document.getElementById('preview-link').href = data.preview_url;
+                    
+                    // Show Verify Box
+                    verifyBox.classList.remove('hidden');
+                    verifyBox.classList.remove('scale-95');
+                    verifyBox.classList.add('scale-100');
+                    
+                    document.getElementById('wp-url').value = '';
+                } else {
+                    showToast(data.detail || "Error fetching URL", "error");
+                }
+            } catch (err) {
+                showToast("Network Error", "error");
+            } finally {
+                btn.innerHTML = '<i class="fas fa-cloud-download-alt"></i> Fetch & Generate Preview';
+                btn.disabled = false;
+            }
+        });
+
+        async function verifyPost() {
+            if (!currentTempSlug) return;
+            const btn = document.getElementById('verify-btn');
+            btn.innerHTML = '<div class="spinner"></div> Processing...';
+            btn.disabled = true;
+
+            try {
+                const res = await fetch(`${API_BASE}/admin/verify-post`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ ...getCreds(), wp_slug: currentTempSlug })
+                });
+                
+                if (res.ok) {
+                    showToast("Verified! AI processing started.", "success");
+                    verifyBox.classList.add('hidden');
+                    currentTempSlug = "";
+                    setTimeout(loadBlogs, 1000); // Reload list after a second
+                } else {
+                    showToast("Verification failed.", "error");
+                }
+            } catch (err) {
+                showToast("Network Error", "error");
+            } finally {
+                btn.innerHTML = '<i class="fas fa-check-circle"></i> Verify & Process AI';
+                btn.disabled = false;
+            }
+        }
+
+        // ================= MANAGE BLOGS =================
+        async function loadBlogs() {
+            blogListEl.innerHTML = '<div class="text-center text-gray-500 py-10"><div class="spinner border-gray-400 border-t-gray-800 mb-3"></div><p>Loading your articles...</p></div>';
+            
+            try {
+                const res = await fetch(`${API_BASE}/admin/blogs`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(getCreds())
+                });
+                
+                if (res.ok) {
+                    const data = await res.json();
+                    allBlogsData = data.blogs;
+                    renderBlogs(allBlogsData);
+                } else {
+                    if (res.status === 401) logout();
+                    blogListEl.innerHTML = '<p class="text-red-500 text-center py-4">Failed to load blogs.</p>';
+                }
+            } catch (err) {
+                blogListEl.innerHTML = '<p class="text-red-500 text-center py-4">Network error.</p>';
+            }
+        }
+
+        function filterBlogs() {
+            const q = document.getElementById('search-blog').value.toLowerCase();
+            const filtered = allBlogsData.filter(b => 
+                b.title.toLowerCase().includes(q) || b.wp_slug.toLowerCase().includes(q)
+            );
+            renderBlogs(filtered);
+        }
+
+        function renderBlogs(blogs) {
+            if (blogs.length === 0) {
+                blogListEl.innerHTML = '<p class="text-gray-500 text-center py-10">No articles found.</p>';
+                return;
+            }
+
+            let html = '';
+            blogs.forEach((b, index) => {
+                const safeTitle = b.title.replace(/"/g, '&quot;');
+                const safeDesc = b.seo_description ? b.seo_description.replace(/"/g, '&quot;') : '';
+                const safeSeoTitle = b.seo_title ? b.seo_title.replace(/"/g, '&quot;') : safeTitle;
+
+                html += `
+                <div class="glass-card p-5 group">
+                    <div class="flex justify-between items-start mb-3">
+                        <div class="flex-grow pr-4">
+                            <h4 class="font-bold text-lg leading-tight mb-1 text-gray-800 line-clamp-1">${safeTitle}</h4>
+                            <span class="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded-md font-medium font-mono">${b.wp_slug}</span>
+                        </div>
+                        <div class="flex gap-2 opacity-50 group-hover:opacity-100 transition-opacity">
+                            <button onclick="toggleEdit(${index})" class="btn-apple bg-gray-200 !text-gray-700 hover:!bg-gray-300 p-2 w-9 h-9 shadow-none rounded-lg"><i class="fas fa-edit"></i></button>
+                            <button onclick="deletePost('${b.wp_slug}')" class="btn-apple btn-danger p-2 w-9 h-9 rounded-lg"><i class="fas fa-trash"></i></button>
+                        </div>
+                    </div>
+                    
+                    <!-- Edit Section (Hidden by default) -->
+                    <div id="edit-box-${index}" class="hidden mt-4 pt-4 border-t border-gray-200 border-opacity-50 space-y-3">
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-500 mb-1">SEO Title</label>
+                            <input type="text" id="seo-title-${index}" class="glass-input text-sm py-2" value="${safeSeoTitle}">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-500 mb-1">Meta Description</label>
+                            <textarea id="seo-desc-${index}" class="glass-input text-sm py-2 h-20 resize-none">${safeDesc}</textarea>
+                        </div>
+                        <div class="flex justify-end gap-2">
+                            <button onclick="toggleEdit(${index})" class="text-xs font-semibold text-gray-500 px-3 py-2">Cancel</button>
+                            <button onclick="saveSEO('${b.wp_slug}', ${index})" id="save-btn-${index}" class="btn-apple text-sm py-1.5 px-4 shadow-sm">Save Changes</button>
+                        </div>
+                    </div>
+                </div>
+                `;
+            });
+            blogListEl.innerHTML = html;
+        }
+
+        function toggleEdit(index) {
+            const el = document.getElementById(`edit-box-${index}`);
+            el.classList.toggle('hidden');
+        }
+
+        async function saveSEO(slug, index) {
+            const title = document.getElementById(`seo-title-${index}`).value;
+            const desc = document.getElementById(`seo-desc-${index}`).value;
+            const btn = document.getElementById(`save-btn-${index}`);
+            
+            btn.innerHTML = '<div class="spinner w-3 h-3"></div>';
+            
+            try {
+                const res = await fetch(`${API_BASE}/admin/update-seo`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ ...getCreds(), wp_slug: slug, seo_title: title, seo_description: desc })
+                });
+                
+                if (res.ok) {
+                    showToast("SEO Updated!", "success");
+                    toggleEdit(index);
+                    
+                    // Update local cache
+                    const blog = allBlogsData.find(b => b.wp_slug === slug);
+                    if(blog) { blog.seo_title = title; blog.seo_description = desc; }
+                } else {
+                    showToast("Update failed.", "error");
+                }
+            } catch (err) {
+                showToast("Network Error", "error");
+            } finally {
+                btn.innerHTML = 'Save Changes';
+            }
+        }
+
+        async function deletePost(slug) {
+            if (!confirm(`Are you absolutely sure you want to delete '${slug}'? This cannot be undone.`)) return;
+            
+            try {
+                const res = await fetch(`${API_BASE}/admin/delete-post`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ ...getCreds(), wp_slug: slug })
+                });
+                
+                if (res.ok) {
+                    showToast("Post deleted permanently.", "success");
+                    // Remove from UI immediately without full reload
+                    allBlogsData = allBlogsData.filter(b => b.wp_slug !== slug);
+                    filterBlogs(); 
+                } else {
+                    showToast("Failed to delete.", "error");
+                }
+            } catch (err) {
+                showToast("Network Error", "error");
+            }
+        }
+
+        // ================= UTILS =================
+        function getCreds() {
+            return {
+                username: localStorage.getItem("adminId"),
+                password: localStorage.getItem("adminPass")
+            };
+        }
+
+        function showToast(msg, type) {
+            const toast = document.getElementById('toast');
+            const icon = document.getElementById('toast-icon');
+            const msgEl = document.getElementById('toast-msg');
+            
+            msgEl.textContent = msg;
+            toast.className = `fixed bottom-5 right-5 glass-panel px-6 py-4 flex items-center gap-3 transform transition-all duration-300 z-50 shadow-xl`;
+            
+            if (type === 'success') {
+                icon.className = 'fas fa-check-circle text-green-500 text-xl';
+                toast.style.borderLeft = '4px solid #34c759';
+            } else if (type === 'error') {
+                icon.className = 'fas fa-exclamation-triangle text-red-500 text-xl';
+                toast.style.borderLeft = '4px solid #ff3b30';
+            } else {
+                icon.className = 'fas fa-info-circle text-blue-500 text-xl';
+                toast.style.borderLeft = '4px solid #0071e3';
+            }
+            
+            // Show
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            
+            // Hide after 3s
+            setTimeout(() => {
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
