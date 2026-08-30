@@ -7,3 +7,5 @@ pydantic
 pillow
 passlib[bcrypt]
 python-multipart
+google-auth
+pywebpush
