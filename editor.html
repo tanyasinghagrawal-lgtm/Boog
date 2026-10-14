@@ -1,0 +1,2617 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Article Studio & Rich Publishing Suite - To The Point</title>
+    <link rel="icon" href="https://pranavblog.online/favicon.ico" type="image/x-icon">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&family=Fira+Code:wght@400;500&display=swap');
+        body { font-family: 'Quicksand', sans-serif; }
+        .font-mono-code { font-family: 'Fira Code', monospace; }
+
+        /* Nature-inspired Glassmorphism Theme (Original Palette Preserved) */
+        .nature-gradient { 
+            background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 50%, #bbf7d0 100%); 
+        }
+        .glass-nav { 
+            background: rgba(255, 255, 255, 0.65); 
+            backdrop-filter: blur(16px); 
+            border-bottom: 1px solid rgba(255, 255, 255, 0.7); 
+        }
+        .glass-morphism { 
+            background: rgba(255, 255, 255, 0.85); 
+            backdrop-filter: blur(20px); 
+            border: 1px solid rgba(255, 255, 255, 0.7); 
+            box-shadow: 0 10px 35px 0 rgba(31, 38, 135, 0.08); 
+        }
+        .glass-modal {
+            background: rgba(255, 255, 255, 0.94);
+            backdrop-filter: blur(25px);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            box-shadow: 0 25px 50px -12px rgba(16, 185, 129, 0.25);
+        }
+
+        #editorContent {
+            min-height: 520px;
+            outline: none;
+            word-break: break-word;
+            font-size: 1.03rem;
+            line-height: 1.85;
+            color: #374151;
+        }
+        #editorContent:empty:before {
+            content: attr(placeholder);
+            color: #9ca3af;
+            font-style: italic;
+            pointer-events: none;
+        }
+        #editorContent p, .blog-content p,
+        #editorContent div:not(.callout-box):not(.article-img-wrap):not(.img-toolbar):not(.editor-block-toolbar):not(.table-wrapper-block) { 
+            margin-bottom: 1.25rem; 
+            line-height: 1.85; 
+            color: #374151; 
+            font-size: 1.03rem !important; 
+            font-weight: 400;
+        }
+        #editorContent h1, .blog-content h1 { 
+            font-size: 2.15rem !important; 
+            font-weight: 700 !important; 
+            color: #064e3b !important; 
+            margin-top: 2rem; 
+            margin-bottom: 1rem; 
+            line-height: 1.25; 
+        }
+        #editorContent h2, .blog-content h2 { 
+            font-size: 1.65rem !important; 
+            font-weight: 700 !important; 
+            color: #065f46 !important; 
+            margin-top: 1.75rem; 
+            margin-bottom: 0.85rem; 
+            line-height: 1.3; 
+        }
+        #editorContent h3, .blog-content h3 { 
+            font-size: 1.35rem !important; 
+            font-weight: 600 !important; 
+            color: #047857 !important; 
+            margin-top: 1.5rem; 
+            margin-bottom: 0.75rem; 
+            line-height: 1.35;
+        }
+        #editorContent h4, .blog-content h4 { 
+            font-size: 1.15rem !important; 
+            font-weight: 600 !important; 
+            color: #059669 !important; 
+            margin-top: 1.25rem; 
+            margin-bottom: 0.65rem; 
+            line-height: 1.4;
+        }
+        /* Prevent pasted spans inside paragraphs from blowing up font size */
+        #editorContent p span, #editorContent li span {
+            font-size: inherit !important;
+            line-height: inherit !important;
+            font-family: inherit !important;
+        }
+
+        #editorContent ul, .blog-content ul { 
+            list-style-type: disc; 
+            padding-left: 2rem; 
+            margin-bottom: 1.25rem; 
+            color: #374151; 
+            font-size: 1.03rem;
+        }
+        #editorContent ol, .blog-content ol { 
+            list-style-type: decimal; 
+            padding-left: 2rem; 
+            margin-bottom: 1.25rem; 
+            color: #374151; 
+            font-size: 1.03rem;
+        }
+        #editorContent li, .blog-content li { 
+            margin-bottom: 0.35rem; 
+            line-height: 1.7; 
+            font-size: 1.03rem;
+        }
+        #editorContent blockquote, .blog-content blockquote { 
+            border-left: 4px solid #10b981; 
+            background: #f0fdf4; 
+            padding: 1rem 1.25rem; 
+            margin: 1.5rem 0; 
+            border-radius: 0 0.75rem 0.75rem 0; 
+            font-style: italic; 
+            color: #065f46;
+            position: relative;
+            font-size: 1.03rem;
+        }
+        #editorContent a, .blog-content a { 
+            color: #059669; 
+            text-decoration: underline; 
+            font-weight: 500; 
+        }
+        #editorContent table, .blog-content table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            overflow-x: auto;
+            display: table;
+            font-size: 0.98rem;
+        }
+        #editorContent th, #editorContent td, .blog-content th, .blog-content td {
+            border: 1px solid #d1fae5;
+            padding: 0.75rem 1rem;
+            text-align: left;
+        }
+        #editorContent th, .blog-content th {
+            background-color: #ecfdf5;
+            color: #065f46;
+            font-weight: 700;
+        }
+        #editorContent hr, .blog-content hr {
+            border: 0;
+            height: 2px;
+            background: linear-gradient(to right, #bbf7d0, #10b981, #bbf7d0);
+            margin: 2rem 0;
+        }
+
+        /* Callout Boxes inside Editor */
+        .callout-box {
+            padding: 1rem 1.25rem;
+            margin: 1.5rem 0;
+            border-radius: 0.85rem;
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+            position: relative;
+            font-size: 1rem;
+        }
+        .callout-tip {
+            background-color: #f0fdf4;
+            border-left: 4px solid #10b981;
+            color: #065f46;
+        }
+        .callout-info {
+            background-color: #eff6ff;
+            border-left: 4px solid #3b82f6;
+            color: #1e40af;
+        }
+        .callout-warning {
+            background-color: #fffbeb;
+            border-left: 4px solid #f59e0b;
+            color: #92400e;
+        }
+
+        .code-snippet-wrap {
+            background-color: #1e293b;
+            color: #e2e8f0;
+            border-radius: 0.75rem;
+            padding: 2.35rem 1.25rem 1rem 1.25rem;
+            margin: 1.5rem 0;
+            position: relative;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.9rem !important;
+            overflow-x: auto;
+            line-height: 1.6;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+        .code-snippet-wrap code {
+            outline: none;
+            display: block;
+            min-height: 1.5rem;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.9rem !important;
+        }
+
+        /* Action Toolbar inside Code, Callouts, Blockquotes, and Tables */
+        .editor-block-toolbar {
+            position: absolute;
+            top: 6px;
+            right: 8px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            background: rgba(6, 78, 59, 0.92);
+            backdrop-filter: blur(8px);
+            padding: 3px 8px;
+            border-radius: 9999px;
+            z-index: 15;
+            opacity: 0;
+            transition: opacity 0.18s ease;
+            user-select: none;
+        }
+        .code-snippet-wrap .editor-block-toolbar {
+            opacity: 1;
+            top: 6px;
+            right: 8px;
+            left: 8px;
+            justify-content: space-between;
+            background: rgba(15, 23, 42, 0.92);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 0.5rem;
+            padding: 3px 10px;
+        }
+        .callout-box:hover .editor-block-toolbar,
+        blockquote:hover .editor-block-toolbar,
+        .table-wrapper-block:hover .editor-block-toolbar {
+            opacity: 1;
+        }
+        .block-tool-btn {
+            color: #ecfdf5;
+            font-size: 0.7rem;
+            font-family: 'Quicksand', sans-serif;
+            font-weight: 700;
+            padding: 2px 7px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.15s;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .block-tool-btn:hover {
+            background: rgba(255, 255, 255, 0.15);
+            color: #6ee7b7;
+        }
+        .block-tool-btn.danger:hover {
+            background: rgba(239, 68, 68, 0.28);
+            color: #fca5a5;
+        }
+
+        .article-img-wrap {
+            position: relative;
+            display: block;
+            margin: 1.5rem auto;
+            max-width: 100%;
+            text-align: center;
+            border-radius: 1rem;
+            overflow: visible;
+        }
+        .article-img-wrap img {
+            border-radius: 1rem;
+            max-width: 100%;
+            height: auto;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+            display: block;
+            margin: 0 auto;
+        }
+        .article-img-wrap.pending-upload img {
+            border: 2px dashed #10b981;
+        }
+        .img-toolbar {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(6, 78, 59, 0.9);
+            backdrop-filter: blur(8px);
+            border-radius: 50px;
+            padding: 4px 10px;
+            display: flex;
+            gap: 8px;
+            opacity: 0;
+            transition: opacity 0.2s ease, transform 0.2s ease;
+            transform: translateY(-5px);
+            z-index: 10;
+            user-select: none;
+        }
+        .article-img-wrap:hover .img-toolbar {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .img-tool-btn {
+            color: white;
+            font-size: 0.78rem;
+            padding: 4px 6px;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: color 0.15s;
+        }
+        .img-tool-btn:hover {
+            color: #86efac;
+        }
+
+        /* General Toolbar Button states */
+        .tool-btn {
+            width: 34px;
+            height: 34px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 0.5rem;
+            color: #166534;
+            transition: all 0.15s;
+        }
+        .tool-btn:hover {
+            background: #dcfce7;
+            color: #14532d;
+            transform: translateY(-1px);
+        }
+        .tool-btn:active {
+            transform: scale(0.95);
+        }
+        .tool-btn.active-format {
+            background: #059669 !important;
+            color: #ffffff !important;
+            box-shadow: 0 2px 6px rgba(5, 150, 105, 0.3);
+        }
+
+        /* Floating Selection Bubble Menu */
+        #selectionBubble {
+            position: fixed;
+            z-index: 60;
+            background: rgba(6, 78, 59, 0.96);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(110, 231, 183, 0.45);
+            border-radius: 9999px;
+            padding: 4px 10px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.22);
+            user-select: none;
+        }
+        .bubble-btn {
+            color: #ecfdf5;
+            font-size: 0.74rem;
+            font-weight: 700;
+            padding: 4px 8px;
+            border-radius: 9999px;
+            transition: all 0.15s;
+            cursor: pointer;
+        }
+        .bubble-btn:hover {
+            background: rgba(255, 255, 255, 0.15);
+            color: #6ee7b7;
+        }
+        .bubble-btn.active-bubble {
+            background: #10b981;
+            color: #ffffff;
+        }
+
+        /* Spinners & Animations */
+        @keyframes spinSlow { to { transform: rotate(360deg); } }
+        .spin-loader { animation: spinSlow 1s linear infinite; }
+
+        /* Fullscreen Zen Mode */
+        .zen-active {
+            position: fixed !important;
+            inset: 0 !important;
+            z-index: 100 !important;
+            margin: 0 !important;
+            border-radius: 0 !important;
+            max-width: 100% !important;
+            height: 100vh !important;
+            background: #ffffff !important;
+            overflow-y: auto !important;
+            padding: 2rem 15% !important;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.03); }
+        ::-webkit-scrollbar-thumb { background: #86efac; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #4ade80; }
+    </style>
+</head>
+<body class="nature-gradient min-h-screen text-gray-800 flex flex-col">
+
+    <nav class="fixed w-full z-40 glass-nav top-0 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 md:px-8 py-3 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <i class="fas fa-feather-pointed text-green-700 text-2xl"></i>
+                <div class="flex flex-col">
+                    <span class="font-bold text-2xl text-green-950 leading-none">To The Point</span>
+                    <span class="text-[0.65rem] font-semibold text-green-700 tracking-wider uppercase mt-1">Advanced Draft Studio & Work Manager</span>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-3">
+                <!-- Task / Work Manager Toggle Button -->
+                <button onclick="toggleTaskManagerModal()" title="View Saved Work & Switch Tasks" class="px-3.5 py-1.5 text-xs font-bold text-green-900 bg-white/80 hover:bg-white rounded-xl border border-green-300 shadow-sm transition flex items-center gap-2">
+                    <i class="fas fa-folder-open text-green-700"></i>
+                    <span class="hidden sm:inline">Saved Work</span>
+                    <span id="savedWorkCountBadge" class="bg-green-600 text-white text-[10px] px-1.5 py-0.2 rounded-full font-mono">1</span>
+                </button>
+
+                <div id="authStatusBadge" class="hidden md:flex items-center gap-2 px-3 py-1 bg-green-100/80 border border-green-300 text-green-900 rounded-full text-xs font-semibold">
+                    <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+                    <span id="badgeUser">Admin Connected</span>
+                </div>
+                
+                <button onclick="handleLogout()" title="Change Admin Credentials" class="px-3 py-1.5 text-xs font-bold text-red-600 bg-red-50 hover:bg-red-100 rounded-xl border border-red-200 transition">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <main class="pt-24 pb-16 px-4 md:px-8 max-w-6xl mx-auto w-full flex-1">
+        
+        <!-- Header Controls & Workflows -->
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+            <div>
+                <div class="flex items-center gap-2 flex-wrap">
+                    <h1 class="text-3xl font-extrabold text-green-950">Article Workspace</h1>
+                    <span id="activeDraftBadge" class="text-xs px-2.5 py-0.5 bg-emerald-100 text-emerald-800 rounded-lg border border-emerald-300 font-semibold truncate max-w-[200px]">Draft: Untitled</span>
+                    <span id="previewGateBadge" class="text-[11px] px-2.5 py-0.5 bg-amber-100 text-amber-800 rounded-lg border border-amber-300 font-bold flex items-center gap-1">
+                        <i class="fas fa-eye text-[10px]"></i> Preview first to unlock Publish
+                    </span>
+                </div>
+                <p class="text-xs md:text-sm text-green-800/80 mt-1">Multi-task caching enabled. Local drafts, instant previewing & zero premature server uploads.</p>
+            </div>
+
+            <div class="flex items-center gap-2.5 flex-wrap">
+                <!-- New Blank Task Button -->
+                <button onclick="createNewBlankDraft()" title="Create New Blank Article" class="px-3.5 py-2.5 rounded-xl font-bold text-xs bg-white/90 border border-green-300 text-green-800 shadow-sm hover:bg-green-100/70 transition flex items-center gap-1.5">
+                    <i class="fas fa-plus text-green-600"></i> New Task
+                </button>
+
+                <!-- Step 1: Trigger Preview (Executes Deferred Uploads & Unlocks Publish Button) -->
+                <button id="topPreviewBtn" onclick="handlePreviewWithDeferredSync()" class="px-5 py-2.5 rounded-xl font-bold text-xs sm:text-sm bg-white border border-green-400 text-green-900 shadow-sm hover:bg-green-50 transition flex items-center gap-2">
+                    <i class="fas fa-eye text-green-600"></i> Preview & Sync
+                </button>
+
+                <!-- Step 2: Final Verification & 2FA Publish (Hidden until Preview is clicked!) -->
+                <button id="topPublishBtn" onclick="handlePublishFlowWithDeferredSync()" class="hidden px-5 sm:px-6 py-2.5 rounded-xl font-bold text-xs sm:text-sm bg-gradient-to-r from-green-600 to-emerald-700 hover:from-green-700 hover:to-emerald-800 text-white shadow-lg shadow-green-700/20 transition flex items-center gap-2">
+                    <i class="fas fa-shield-alt"></i> Publish Post
+                </button>
+            </div>
+        </div>
+
+        <div class="glass-morphism rounded-3xl p-6 md:p-8 mb-6 space-y-5">
+            <div>
+                <div class="flex items-center justify-between mb-2">
+                    <label class="block text-xs font-bold uppercase tracking-wider text-green-900">Article Headline</label>
+                    <span id="titleCharCount" class="text-[11px] text-gray-500 font-mono">0 chars</span>
+                </div>
+                <input type="text" id="postTitle" placeholder="Enter an engaging, click-worthy article title..." 
+                    class="w-full text-xl md:text-2xl font-bold p-4 bg-white/80 border border-green-200 rounded-2xl focus:outline-none focus:border-green-600 focus:bg-white text-green-950 transition placeholder-gray-400">
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <!-- Custom Slug / ID (Optional) -->
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-green-900 mb-2">Custom SEO Slug (Optional)</label>
+                    <div class="flex items-center bg-white/80 border border-green-200 rounded-xl px-3 py-2.5 focus-within:border-green-600 focus-within:bg-white">
+                        <span class="text-xs text-gray-500 font-semibold mr-1">pranavblog.online/</span>
+                        <input type="text" id="customSlug" placeholder="auto-generated from title if blank" class="w-full text-sm bg-transparent outline-none text-gray-700">
+                    </div>
+                </div>
+
+                <!-- Featured Image Box (Persistent Local Cache across Task Switches) -->
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-green-900 mb-2">
+                        Cover Graphic <span class="text-[10px] text-emerald-700 font-normal lowercase">(cached per task & deferred upload)</span>
+                    </label>
+                    <div class="flex items-center gap-3 flex-wrap">
+                        <input type="file" id="featuredImgInput" accept="image/*" class="hidden" onchange="handleFeaturedImageSelect(event)">
+                        <button onclick="document.getElementById('featuredImgInput').click()" class="px-4 py-2 bg-green-100/80 hover:bg-green-200 text-green-900 font-bold text-xs rounded-xl border border-green-300 transition flex items-center gap-2">
+                            <i class="fas fa-image"></i> Select Cover
+                        </button>
+                        <div id="featuredImgPreviewWrap" class="hidden flex items-center gap-2 bg-white/80 px-2.5 py-1 rounded-xl border border-green-300">
+                            <img id="featuredImgThumb" src="" class="w-10 h-10 object-cover rounded-lg border border-green-400 shadow-sm">
+                            <div class="flex flex-col">
+                                <span id="featuredImgHashText" class="text-xs text-green-900 font-mono font-bold truncate max-w-[135px]"></span>
+                                <span id="featuredImgStateSub" class="text-[10px] text-emerald-700 font-semibold">Saved in Task Cache</span>
+                            </div>
+                            <button onclick="clearFeaturedImage()" class="text-red-500 hover:text-red-700 text-xs ml-1 p-1" title="Remove Cover"><i class="fas fa-trash"></i></button>
+                        </div>
+                        <span id="featuredImgStatus" class="text-xs text-gray-500 italic">No cover selected</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Live Google Search SERP Snippet Preview (pranavblog.online + favicon.ico) -->
+            <div class="mt-4 pt-4 border-t border-green-100">
+                <button onclick="toggleSerpPreview()" class="text-xs font-bold text-green-800 hover:text-green-950 flex items-center gap-1.5">
+                    <i class="fas fa-search text-green-600"></i> <span id="serpToggleLabel">Hide Google SERP Snippet Preview</span>
+                </button>
+                <div id="serpPreviewBox" class="mt-3 p-3.5 bg-white rounded-xl border border-gray-200 max-w-xl shadow-sm">
+                    <div class="flex items-center gap-2 text-xs text-gray-700 mb-1">
+                        <img src="https://pranavblog.online/favicon.ico" 
+                             onerror="this.onerror=null; this.src='https://www.google.com/s2/favicons?domain=pranavblog.online&sz=64';" 
+                             alt="favicon" class="w-4 h-4 rounded-sm object-contain shrink-0">
+                        <span class="font-semibold text-gray-900 truncate">pranavblog.online</span>
+                        <span class="text-gray-400">&gt;</span>
+                        <span id="serpSlugText" class="text-gray-500 truncate">post-url-slug</span>
+                    </div>
+                    <div id="serpTitleText" class="text-blue-700 text-base font-semibold hover:underline cursor-pointer truncate">Article Headline</div>
+                    <div id="serpDescText" class="text-xs text-gray-600 mt-1 line-clamp-2">Article description will automatically form from your opening paragraph content.</div>
+                </div>
+            </div>
+        </div>
+
+        <div id="editorToolbar" class="sticky top-20 z-30 glass-morphism rounded-2xl p-2.5 mb-4 border border-green-200/80 shadow-md">
+            <div class="flex flex-wrap items-center gap-1 md:gap-1.5">
+                
+                <!-- History Controls (Undo / Redo) -->
+                <button onclick="execCmd('undo')" title="Undo (Ctrl+Z)" class="tool-btn"><i class="fas fa-rotate-left"></i></button>
+                <button onclick="execCmd('redo')" title="Redo (Ctrl+Y)" class="tool-btn"><i class="fas fa-rotate-right"></i></button>
+
+                <div class="h-5 w-[1px] bg-green-200 mx-1"></div>
+
+                <!-- Live Synced Heading Selector -->
+                <select id="headingSelect" onchange="formatHeading(this.value)" title="Current Block Format (Auto-updates when you click text)" class="text-xs font-bold bg-white/95 border border-green-300 text-green-950 rounded-lg px-2.5 py-1.5 outline-none hover:bg-green-50 transition cursor-pointer">
+                    <option value="P">Normal Body (P)</option>
+                    <option value="H1">Heading 1 (H1)</option>
+                    <option value="H2">Heading 2 (H2)</option>
+                    <option value="H3">Heading 3 (H3)</option>
+                    <option value="H4">Heading 4 (H4)</option>
+                </select>
+
+                <!-- Live Current Tag Badge + 1-Click "Remove Heading (Make Normal Body)" Button -->
+                <div class="flex items-center gap-1 bg-emerald-50 border border-emerald-200 rounded-lg px-2 py-1">
+                    <span id="currentBlockBadge" class="text-[11px] font-mono font-bold text-emerald-900">Body (P)</span>
+                    <button id="removeHeadingBtn" onclick="resetCurrentBlockToParagraph()" title="Remove H1/H2/H3 & Convert to Normal Body Paragraph" class="hidden ml-1 px-1.5 py-0.5 bg-red-100 hover:bg-red-200 text-red-700 rounded text-[10px] font-bold transition flex items-center gap-1">
+                        <i class="fas fa-xmark"></i> Reset to Normal
+                    </button>
+                </div>
+
+                <div class="h-5 w-[1px] bg-green-200 mx-1"></div>
+
+                <!-- Text Style Buttons -->
+                <button id="btnBold" onclick="execCmd('bold')" title="Bold (Ctrl+B)" class="tool-btn"><i class="fas fa-bold"></i></button>
+                <button id="btnItalic" onclick="execCmd('italic')" title="Italic (Ctrl+I)" class="tool-btn"><i class="fas fa-italic"></i></button>
+                <button id="btnUnderline" onclick="execCmd('underline')" title="Underline (Ctrl+U)" class="tool-btn"><i class="fas fa-underline"></i></button>
+                <button id="btnStrike" onclick="execCmd('strikeThrough')" title="Strikethrough" class="tool-btn"><i class="fas fa-strikethrough"></i></button>
+                <button onclick="toggleHighlight()" title="Yellow Highlighter" class="tool-btn text-amber-600"><i class="fas fa-highlighter"></i></button>
+
+                <div class="h-5 w-[1px] bg-green-200 mx-1"></div>
+
+                <!-- Alignments -->
+                <button onclick="execCmd('justifyLeft')" title="Align Left" class="tool-btn"><i class="fas fa-align-left"></i></button>
+                <button onclick="execCmd('justifyCenter')" title="Align Center" class="tool-btn"><i class="fas fa-align-center"></i></button>
+                <button onclick="execCmd('justifyRight')" title="Align Right" class="tool-btn"><i class="fas fa-align-right"></i></button>
+
+                <div class="h-5 w-[1px] bg-green-200 mx-1"></div>
+
+                <!-- Lists & Quote -->
+                <button id="btnUl" onclick="execCmd('insertUnorderedList')" title="Bullet List" class="tool-btn"><i class="fas fa-list-ul"></i></button>
+                <button id="btnOl" onclick="execCmd('insertOrderedList')" title="Numbered List" class="tool-btn"><i class="fas fa-list-ol"></i></button>
+                <button onclick="insertBlockquote()" title="Quote Callout" class="tool-btn"><i class="fas fa-quote-left"></i></button>
+
+                <div class="h-5 w-[1px] bg-green-200 mx-1"></div>
+
+                <!-- Callout Box Inserters -->
+                <div class="relative inline-block" id="calloutDropdownWrap">
+                    <button onclick="toggleCalloutMenu()" title="Insert Callout Card" class="tool-btn text-emerald-800 bg-emerald-50">
+                        <i class="fas fa-circle-info"></i>
+                    </button>
+                    <div id="calloutMenu" class="hidden absolute top-full left-0 mt-2 w-40 bg-white rounded-xl shadow-xl border border-green-200 p-1.5 z-50">
+                        <button onclick="insertCallout('tip')" class="w-full text-left px-2.5 py-1.5 text-xs text-green-800 hover:bg-green-50 rounded-lg flex items-center gap-2">
+                            <i class="fas fa-lightbulb text-green-600"></i> Tip Box
+                        </button>
+                        <button onclick="insertCallout('info')" class="w-full text-left px-2.5 py-1.5 text-xs text-blue-800 hover:bg-blue-50 rounded-lg flex items-center gap-2">
+                            <i class="fas fa-info-circle text-blue-600"></i> Info Box
+                        </button>
+                        <button onclick="insertCallout('warning')" class="w-full text-left px-2.5 py-1.5 text-xs text-amber-800 hover:bg-amber-50 rounded-lg flex items-center gap-2">
+                            <i class="fas fa-triangle-exclamation text-amber-600"></i> Warning Box
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Code Snippet -->
+                <button onclick="insertCodeSnippet()" title="Code Block Snippet (Removable)" class="tool-btn font-mono-code font-bold"><i class="fas fa-code"></i></button>
+
+                <!-- Media, Links & Tables -->
+                <button onclick="promptInsertLink()" title="Hyperlink" class="tool-btn"><i class="fas fa-link"></i></button>
+                <button onclick="execCmd('unlink')" title="Remove Link" class="tool-btn"><i class="fas fa-unlink"></i></button>
+                
+                <!-- Deferred Inline Image Trigger -->
+                <input type="file" id="inlineImgInput" accept="image/*" class="hidden" onchange="handleDeferredInlineImageSelect(event)">
+                <button onclick="document.getElementById('inlineImgInput').click()" title="Insert Image (Cached Locally)" class="tool-btn text-emerald-800 bg-emerald-100 hover:bg-emerald-200">
+                    <i class="fas fa-photo-film"></i>
+                </button>
+                
+                <button onclick="insertCleanTable()" title="Insert Responsive Table" class="tool-btn"><i class="fas fa-table"></i></button>
+                <button onclick="execCmd('insertHorizontalRule')" title="Divider Line" class="tool-btn"><i class="fas fa-minus"></i></button>
+                
+                <!-- Fix / Normalize Pasted Article Formatting Button -->
+                <button onclick="cleanAndNormalizeEntireArticle()" title="Fix Oversized Text / Clean Pasted Formatting" class="tool-btn text-red-500"><i class="fas fa-eraser"></i></button>
+
+                <div class="h-5 w-[1px] bg-green-200 mx-1"></div>
+
+                <!-- Toggle Floating Selection Popup, Raw HTML Mode & Zen Mode -->
+                <button onclick="toggleBubbleFeature()" id="bubbleToggleBtn" title="Enable/Disable Floating Selection Popup" class="tool-btn text-emerald-700 bg-emerald-50"><i class="fas fa-comment-dots"></i></button>
+                <button onclick="toggleRawHtmlMode()" id="htmlToggleBtn" title="Toggle HTML Source" class="tool-btn text-purple-700"><i class="fas fa-file-code"></i></button>
+                <button onclick="toggleZenFullscreen()" title="Distraction-Free Zen View" class="tool-btn text-teal-700"><i class="fas fa-expand"></i></button>
+            </div>
+        </div>
+
+        <div id="selectionBubble" class="hidden">
+            <span id="bubbleTagIndicator" class="text-[10px] font-mono font-bold text-emerald-300 px-2 py-0.5 bg-emerald-950/90 rounded-full border border-emerald-700">Body</span>
+            <button onmousedown="event.preventDefault(); formatHeading('H1')" class="bubble-btn" data-tag="H1" title="Make Heading 1 (Click again to remove)">H1</button>
+            <button onmousedown="event.preventDefault(); formatHeading('H2')" class="bubble-btn" data-tag="H2" title="Make Heading 2 (Click again to remove)">H2</button>
+            <button onmousedown="event.preventDefault(); formatHeading('H3')" class="bubble-btn" data-tag="H3" title="Make Heading 3 (Click again to remove)">H3</button>
+            <button onmousedown="event.preventDefault(); resetCurrentBlockToParagraph()" class="bubble-btn bg-emerald-800/80 text-emerald-100" data-tag="P" title="Remove Heading / Make Normal Body Text">Normal (P)</button>
+            <div class="h-3.5 w-[1px] bg-emerald-700 mx-0.5"></div>
+            <button onmousedown="event.preventDefault(); execCmd('bold')" class="bubble-btn" id="bubbleBold" title="Bold"><i class="fas fa-bold"></i></button>
+            <button onmousedown="event.preventDefault(); execCmd('italic')" class="bubble-btn" id="bubbleItalic" title="Italic"><i class="fas fa-italic"></i></button>
+            <button onmousedown="event.preventDefault(); closeSelectionBubble()" class="bubble-btn text-red-300 hover:text-red-200 ml-1" title="Hide Popup"><i class="fas fa-xmark"></i></button>
+        </div>
+
+        <div id="editorCanvasCard" class="glass-morphism rounded-3xl p-6 md:p-10 mb-6 relative transition-all">
+            
+            <!-- Visual Contenteditable Canvas -->
+            <div id="editorContent" contenteditable="true" spellcheck="true" placeholder="Start crafting your story, or paste article draft from Docs / Word / Notes..." class="text-gray-800"></div>
+
+            <!-- Raw HTML Code Editor (Toggled via button) -->
+            <textarea id="rawHtmlEditor" class="hidden w-full h-[520px] font-mono-code text-xs sm:text-sm p-4 bg-gray-900 text-green-400 rounded-2xl border border-gray-700 outline-none focus:border-green-500" spellcheck="false"></textarea>
+
+            <!-- Comprehensive Live Reader & Writer Analytics -->
+            <div class="mt-8 pt-4 border-t border-green-100 flex flex-wrap items-center justify-between text-xs text-green-900 font-semibold gap-3">
+                <div class="flex items-center gap-4 flex-wrap">
+                    <span><i class="fas fa-font text-green-600 mr-1"></i> <b id="statWords">0</b> words</span>
+                    <span><i class="fas fa-text-width text-green-600 mr-1"></i> <b id="statChars">0</b> chars</span>
+                    <span><i class="fas fa-clock text-green-600 mr-1"></i> <b id="statReadTime">0</b> min read</span>
+                    <span><i class="fas fa-images text-green-600 mr-1"></i> <b id="statImages">0</b> images</span>
+                    <span id="pendingUploadIndicator" class="hidden text-amber-700 bg-amber-100 px-2.5 py-0.5 rounded-full text-[11px] font-bold">
+                        <i class="fas fa-clock mr-1"></i> <span id="pendingUploadCount">0</span> local image(s) cached
+                    </span>
+                </div>
+                <div id="autoSaveIndicator" class="text-gray-500 italic flex items-center gap-1.5 font-medium">
+                    <i class="fas fa-circle text-[8px] text-green-500"></i> Auto-cache synced
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- ================= FLOATING TOAST CONTAINER ================= -->
+    <div id="toastContainer" class="fixed bottom-6 right-6 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+    <!-- 1. MULTI-TASK & PREVIOUS WORK MANAGER MODAL -->
+    <div id="taskManagerModal" class="fixed inset-0 z-50 bg-black/40 backdrop-blur-md flex items-center justify-center p-4 hidden">
+        <div class="glass-modal rounded-3xl p-6 md:p-8 max-w-2xl w-full border border-green-200 max-h-[85vh] flex flex-col">
+            <div class="flex items-center justify-between pb-4 border-b border-green-200">
+                <div>
+                    <h3 class="text-xl font-bold text-green-950 flex items-center gap-2">
+                        <i class="fas fa-folder-tree text-green-600"></i> Workspace Task Manager
+                    </h3>
+                    <p class="text-xs text-green-800">Switch between different article drafts — cover thumbnails & text stay safely cached.</p>
+                </div>
+                <button onclick="toggleTaskManagerModal()" class="w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-600 flex items-center justify-center text-sm font-bold">&times;</button>
+            </div>
+
+            <!-- Task List -->
+            <div id="tasksListContainer" class="py-4 space-y-3 overflow-y-auto flex-1 pr-1">
+                <!-- Dynamically populated -->
+            </div>
+
+            <div class="pt-4 border-t border-green-200 flex items-center justify-between">
+                <span class="text-xs text-gray-500">Auto-saved in your browser's persistent cache.</span>
+                <button onclick="createNewBlankDraft(); toggleTaskManagerModal();" class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white font-bold text-xs rounded-xl shadow-md transition flex items-center gap-1.5">
+                    <i class="fas fa-plus"></i> Start New Article
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. LOGIN / CACHE HANDSHAKE MODAL -->
+    <div id="loginModal" class="fixed inset-0 z-50 bg-black/40 backdrop-blur-md flex items-center justify-center p-4 hidden">
+        <div class="glass-modal rounded-3xl p-8 max-w-md w-full border border-green-200">
+            <div class="text-center mb-6">
+                <div class="w-14 h-14 mx-auto mb-3 rounded-2xl bg-gradient-to-tr from-green-600 to-emerald-500 flex items-center justify-center text-white text-2xl shadow-lg shadow-green-600/30">
+                    <i class="fas fa-feather-pointed"></i>
+                </div>
+                <h3 class="text-2xl font-bold text-green-950">Publisher Login</h3>
+                <p class="text-xs text-green-800 mt-1">Credentials will be cached securely in your local browser session.</p>
+            </div>
+
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-xs font-bold uppercase text-green-900 mb-1">Username</label>
+                    <input type="text" id="modalUsername" class="w-full p-3 rounded-xl bg-white border border-green-200 focus:outline-none focus:border-green-600 text-sm">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold uppercase text-green-900 mb-1">Password</label>
+                    <input type="password" id="modalPassword" class="w-full p-3 rounded-xl bg-white border border-green-200 focus:outline-none focus:border-green-600 text-sm">
+                </div>
+                
+                <p id="loginErrorMsg" class="text-red-500 text-xs hidden font-bold text-center"></p>
+
+                <button onclick="attemptModalLogin()" class="w-full py-3 bg-green-600 hover:bg-green-700 text-white font-bold rounded-xl shadow-lg shadow-green-700/20 transition flex items-center justify-center gap-2">
+                    <i class="fas fa-key"></i> Authenticate & Unlock Studio
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. ARTICLE PREVIEW MODAL WITH DIRECT PREVIEW LINK -->
+    <div id="previewModal" class="fixed inset-0 z-50 bg-black/50 backdrop-blur-md flex items-center justify-center p-4 hidden">
+        <div class="glass-modal rounded-3xl max-w-4xl w-full h-[90vh] flex flex-col overflow-hidden border border-green-200">
+            <!-- Header bar with shareable Preview Link bar -->
+            <div class="p-4 bg-green-50 border-b border-green-200 flex flex-col sm:flex-row items-center justify-between gap-3">
+                <div class="flex items-center gap-2 text-green-900 font-bold text-sm">
+                    <i class="fas fa-desktop text-green-600"></i> Reader View Preview
+                </div>
+
+                <!-- Preview Link Bar -->
+                <div id="previewLinkContainer" class="flex items-center gap-2 bg-white px-3 py-1.5 rounded-xl border border-green-300 w-full sm:w-auto">
+                    <i class="fas fa-link text-xs text-green-600"></i>
+                    <input type="text" id="previewLinkInput" readonly class="text-xs font-mono text-gray-700 bg-transparent outline-none w-48 sm:w-60 truncate">
+                    <button onclick="copyPreviewLink()" title="Copy Link" class="text-xs text-green-700 font-bold hover:text-green-900 px-2 py-0.5 rounded bg-green-100 hover:bg-green-200 transition">
+                        Copy
+                    </button>
+                    <a id="previewOpenNewTabBtn" href="#" target="_blank" title="Open in new tab" class="text-xs text-gray-600 hover:text-green-700 p-1">
+                        <i class="fas fa-arrow-up-right-from-square"></i>
+                    </a>
+                </div>
+
+                <div class="flex items-center gap-2">
+                    <button onclick="closePreviewModal()" class="px-3 py-1.5 bg-gray-200 hover:bg-gray-300 rounded-lg text-xs font-bold text-gray-700">Close</button>
+                    <button onclick="proceedToVerifyFromPreview()" class="px-4 py-1.5 bg-green-600 hover:bg-green-700 rounded-lg text-xs font-bold text-white shadow-sm flex items-center gap-1.5">
+                        <i class="fas fa-check-circle"></i> Looks Good, Publish
+                    </button>
+                </div>
+            </div>
+            
+            <div class="p-6 md:p-10 overflow-y-auto flex-1 bg-white" id="previewContainer">
+                <h1 id="pvTitle" class="text-3xl font-extrabold text-green-950 mb-6 leading-tight"></h1>
+                <div id="pvCoverWrap" class="mb-6 rounded-2xl overflow-hidden shadow-md hidden">
+                    <img id="pvCoverImg" class="w-full h-72 object-cover" src="">
+                </div>
+                <div id="pvBody" class="blog-content text-gray-800"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 4. GOOGLE AUTHENTICATOR (TOTP) 2FA MODAL -->
+    <div id="totpModal" class="fixed inset-0 z-50 bg-black/50 backdrop-blur-md flex items-center justify-center p-4 hidden">
+        <div class="glass-modal rounded-3xl p-8 max-w-md w-full border border-green-200 text-center">
+            <div class="w-14 h-14 mx-auto mb-4 rounded-2xl bg-gradient-to-tr from-emerald-500 to-green-700 flex items-center justify-center text-white text-2xl shadow-lg shadow-emerald-600/30">
+                <i class="fas fa-shield-halved"></i>
+            </div>
+            <h3 class="text-2xl font-bold text-green-950">Security Checkpoint</h3>
+            <p class="text-xs text-green-800 mt-2 mb-6">Enter the 6-digit code currently active in your <b>Google Authenticator</b> application.</p>
+
+            <div class="mb-6">
+                <input type="text" id="totpInput" maxlength="6" placeholder="000000" autofocus
+                    class="w-48 text-center text-3xl tracking-widest font-mono font-bold p-3 rounded-2xl bg-white border-2 border-green-300 focus:outline-none focus:border-green-600 text-green-950 mx-auto block shadow-inner">
+                <p id="totpErrorMsg" class="text-red-500 text-xs hidden font-bold mt-3"></p>
+            </div>
+
+            <div class="flex items-center gap-3">
+                <button onclick="closeTotpModal()" class="flex-1 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold rounded-xl text-sm transition">Cancel</button>
+                <button id="finalPublishBtn" onclick="submitFinalVerification()" class="flex-1 py-3 bg-green-600 hover:bg-green-700 text-white font-bold rounded-xl text-sm shadow-lg shadow-green-700/20 transition flex items-center justify-center gap-2">
+                    <span>Verify & Post</span> <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 5. CUSTOM INPUT / CONFIRMATION MODAL (Replaces jarring browser alerts/prompts) -->
+    <div id="customDialogModal" class="fixed inset-0 z-50 bg-black/45 backdrop-blur-sm flex items-center justify-center p-4 hidden">
+        <div class="glass-modal rounded-3xl p-6 max-w-md w-full border border-green-200">
+            <h4 id="dialogTitle" class="text-lg font-bold text-green-950">Confirm Action</h4>
+            <p id="dialogMessage" class="text-xs text-green-800 mt-1.5 leading-relaxed"></p>
+            <div id="dialogInputWrap" class="mt-4 hidden">
+                <input type="text" id="dialogInput" class="w-full p-3 rounded-xl bg-white border border-green-300 focus:outline-none focus:border-green-600 text-sm text-gray-800">
+            </div>
+            <div class="flex items-center justify-end gap-2.5 mt-6">
+                <button id="dialogCancelBtn" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold rounded-xl text-xs transition">Cancel</button>
+                <button id="dialogConfirmBtn" class="px-5 py-2 bg-green-600 hover:bg-green-700 text-white font-bold rounded-xl text-xs shadow-md transition">Confirm</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 6. PROGRESS OVERLAY (FOR BATCH UPLOADS & DRAFT SAVING) -->
+    <div id="loadingOverlay" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-md flex flex-col items-center justify-center p-4 hidden">
+        <div class="w-16 h-16 border-4 border-white/20 border-t-green-400 rounded-full spin-loader mb-4"></div>
+        <h4 id="loadingTitle" class="text-white text-xl font-bold">Synchronizing Content...</h4>
+        <p id="loadingSubtitle" class="text-green-200 text-xs mt-1">Compressing & uploading media to media server</p>
+        
+        <!-- Progress bar indicator -->
+        <div class="w-64 bg-white/20 rounded-full h-2 mt-4 overflow-hidden">
+            <div id="loadingProgressBar" class="bg-green-400 h-full w-0 transition-all duration-300"></div>
+        </div>
+    </div>
+
+    <script>
+        const AUTH_STORAGE_KEY = "pranav_admin_credentials";
+        const TASKS_STORAGE_KEY = "pranav_editor_tasks_collection";
+        const ACTIVE_TASK_ID_KEY = "pranav_editor_active_task_id";
+        const IDB_NAME = "PranavStudioMediaVault";
+        const IDB_STORE = "deferred_media";
+
+        let activeAdmin = null;
+        let currentTaskId = null;
+        let generatedSlugCache = null;
+        let isRawHtmlMode = false;
+        let hasPreviewedCurrentState = false;
+        let isPublishingCompleted = false;
+        let isFloatingBubbleEnabled = true;
+
+        // In-memory registry for local deferred inline images
+        const pendingFilesRegistry = new Map();
+
+        // Local deferred featured cover state (persisted per task)
+        let pendingFeaturedFile = null;
+        let pendingFeaturedDataUrl = null;
+        let pendingFeaturedFileName = null;
+        let activeFeaturedHash = null;
+
+        // --- IndexedDB Vault for Large Cover & Inline Image Persistence Across Tasks ---
+        function openMediaVaultDB() {
+            return new Promise((resolve, reject) => {
+                const req = indexedDB.open(IDB_NAME, 1);
+                req.onupgradeneeded = (e) => {
+                    const db = e.target.result;
+                    if (!db.objectStoreNames.contains(IDB_STORE)) {
+                        db.createObjectStore(IDB_STORE);
+                    }
+                };
+                req.onsuccess = () => resolve(req.result);
+                req.onerror = () => reject(req.error);
+            });
+        }
+
+        async function saveVaultItem(key, value) {
+            try {
+                const db = await openMediaVaultDB();
+                return new Promise((resolve) => {
+                    const tx = db.transaction(IDB_STORE, "readwrite");
+                    tx.objectStore(IDB_STORE).put(value, key);
+                    tx.oncomplete = () => resolve(true);
+                    tx.onerror = () => resolve(false);
+                });
+            } catch (e) { return false; }
+        }
+
+        async function getVaultItem(key) {
+            try {
+                const db = await openMediaVaultDB();
+                return new Promise((resolve) => {
+                    const tx = db.transaction(IDB_STORE, "readonly");
+                    const req = tx.objectStore(IDB_STORE).get(key);
+                    req.onsuccess = () => resolve(req.result || null);
+                    req.onerror = () => resolve(null);
+                });
+            } catch (e) { return null; }
+        }
+
+        async function deleteVaultItem(key) {
+            try {
+                const db = await openMediaVaultDB();
+                return new Promise((resolve) => {
+                    const tx = db.transaction(IDB_STORE, "readwrite");
+                    tx.objectStore(IDB_STORE).delete(key);
+                    tx.oncomplete = () => resolve(true);
+                    tx.onerror = () => resolve(false);
+                });
+            } catch (e) { return false; }
+        }
+
+        function dataURLtoFile(dataurl, filename = "graphic.jpg") {
+            try {
+                const arr = dataurl.split(',');
+                const mimeMatch = arr[0].match(/:(.*?);/);
+                const mime = mimeMatch ? mimeMatch[1] : 'image/jpeg';
+                const bstr = atob(arr[1]);
+                let n = bstr.length;
+                const u8arr = new Uint8Array(n);
+                while (n--) u8arr[n] = bstr.charCodeAt(n);
+                return new File([u8arr], filename, { type: mime });
+            } catch (e) { return null; }
+        }
+
+        function fileToCompressedDataURL(file, maxDim = 1500, quality = 0.84) {
+            return new Promise((resolve) => {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const img = new Image();
+                    img.onload = () => {
+                        const canvas = document.createElement('canvas');
+                        let w = img.width;
+                        let h = img.height;
+                        if (w > maxDim || h > maxDim) {
+                            if (w > h) { h = Math.round((h * maxDim) / w); w = maxDim; }
+                            else { w = Math.round((w * maxDim) / h); h = maxDim; }
+                        }
+                        canvas.width = w;
+                        canvas.height = h;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, w, h);
+                        resolve(canvas.toDataURL('image/jpeg', quality));
+                    };
+                    img.onerror = () => resolve(e.target.result);
+                    img.src = e.target.result;
+                };
+                reader.onerror = () => resolve(null);
+                reader.readAsDataURL(file);
+            });
+        }
+
+        // Custom Non-Blocking Modal Dialog (Replaces alert/confirm/prompt)
+        function openCustomDialog({ title = "Notice", message = "", showInput = false, defaultValue = "", confirmText = "Confirm", cancelText = "Cancel", showCancel = true }) {
+            return new Promise((resolve) => {
+                const modal = document.getElementById('customDialogModal');
+                const titleEl = document.getElementById('dialogTitle');
+                const msgEl = document.getElementById('dialogMessage');
+                const inputWrap = document.getElementById('dialogInputWrap');
+                const inputEl = document.getElementById('dialogInput');
+                const confirmBtn = document.getElementById('dialogConfirmBtn');
+                const cancelBtn = document.getElementById('dialogCancelBtn');
+
+                titleEl.innerText = title;
+                msgEl.innerText = message;
+                confirmBtn.innerText = confirmText;
+                cancelBtn.innerText = cancelText;
+                cancelBtn.classList.toggle('hidden', !showCancel);
+
+                if (showInput) {
+                    inputWrap.classList.remove('hidden');
+                    inputEl.value = defaultValue || "";
+                } else {
+                    inputWrap.classList.add('hidden');
+                }
+
+                modal.classList.remove('hidden');
+                if (showInput) setTimeout(() => inputEl.focus(), 50);
+
+                const cleanup = () => {
+                    modal.classList.add('hidden');
+                    confirmBtn.onclick = null;
+                    cancelBtn.onclick = null;
+                    inputEl.onkeydown = null;
+                };
+
+                confirmBtn.onclick = () => {
+                    const val = showInput ? inputEl.value : true;
+                    cleanup();
+                    resolve(val);
+                };
+                cancelBtn.onclick = () => {
+                    cleanup();
+                    resolve(null);
+                };
+                inputEl.onkeydown = (e) => {
+                    if (e.key === 'Enter') confirmBtn.click();
+                    if (e.key === 'Escape') cancelBtn.click();
+                };
+            });
+        }
+
+        window.addEventListener('DOMContentLoaded', async () => {
+            try {
+                document.execCommand('defaultParagraphSeparator', false, 'p');
+            } catch (e) {}
+            await checkAuthHandshake();
+            await initializeTaskSystem();
+            setupEditorEvents();
+            updateTasksBadge();
+            updateSerpSnippet();
+        });
+
+        // Prevent browser Back button from restoring a deleted/published task from memory
+        window.addEventListener('pageshow', async (event) => {
+            if (event.persisted) {
+                isPublishingCompleted = false;
+                await initializeTaskSystem();
+                updateTasksBadge();
+            }
+        });
+
+        window.addEventListener('click', (e) => {
+            const dropdown = document.getElementById('calloutDropdownWrap');
+            if (dropdown && !dropdown.contains(e.target)) {
+                document.getElementById('calloutMenu').classList.add('hidden');
+            }
+        });
+
+        function showToast(message, type = "info") {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            
+            let bgClass = "bg-green-900/90 text-white border-green-600";
+            let icon = "fa-circle-check";
+            if (type === "warn") {
+                bgClass = "bg-amber-900/90 text-amber-100 border-amber-600";
+                icon = "fa-triangle-exclamation";
+            } else if (type === "error") {
+                bgClass = "bg-red-900/90 text-white border-red-600";
+                icon = "fa-circle-xmark";
+            }
+
+            toast.className = `flex items-center gap-3 px-4 py-3 rounded-2xl shadow-xl border backdrop-blur-md text-xs font-semibold ${bgClass} transition-all duration-300 transform translate-y-2 opacity-0 pointer-events-auto`;
+            toast.innerHTML = `<i class="fas ${icon}"></i> <span>${message}</span>`;
+            
+            container.appendChild(toast);
+            requestAnimationFrame(() => {
+                toast.classList.remove('translate-y-2', 'opacity-0');
+            });
+
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'translate-y-2');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        // --- PREVIEW-FIRST PUBLISH GATE ---
+        function setPreviewGateState(isPreviewed, slug = null) {
+            hasPreviewedCurrentState = isPreviewed;
+            const publishBtn = document.getElementById('topPublishBtn');
+            const gateBadge = document.getElementById('previewGateBadge');
+
+            if (isPreviewed) {
+                if (slug) generatedSlugCache = slug;
+                publishBtn.classList.remove('hidden');
+                gateBadge.className = "text-[11px] px-2.5 py-0.5 bg-emerald-100 text-emerald-900 rounded-lg border border-emerald-400 font-bold flex items-center gap-1";
+                gateBadge.innerHTML = `<i class="fas fa-check-circle text-emerald-600 text-[10px]"></i> Preview Verified • Ready to Publish`;
+            } else {
+                publishBtn.classList.add('hidden');
+                gateBadge.className = "text-[11px] px-2.5 py-0.5 bg-amber-100 text-amber-800 rounded-lg border border-amber-300 font-bold flex items-center gap-1";
+                gateBadge.innerHTML = `<i class="fas fa-eye text-[10px]"></i> Preview first to unlock Publish`;
+            }
+        }
+
+        async function checkAuthHandshake() {
+            const cached = localStorage.getItem(AUTH_STORAGE_KEY);
+            if (cached) {
+                try {
+                    const parsed = JSON.parse(cached);
+                    const valid = await verifyCredentialsWithServer(parsed.username, parsed.password);
+                    if (valid) {
+                        activeAdmin = parsed;
+                        document.getElementById('badgeUser').innerText = parsed.username;
+                        document.getElementById('authStatusBadge').classList.remove('hidden');
+                        return;
+                    }
+                } catch(e) {}
+            }
+            document.getElementById('loginModal').classList.remove('hidden');
+        }
+
+        async function verifyCredentialsWithServer(username, password) {
+            try {
+                const res = await fetch('/admin/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+                return res.ok;
+            } catch(e) {
+                return false;
+            }
+        }
+
+        async function attemptModalLogin() {
+            const u = document.getElementById('modalUsername').value.trim();
+            const p = document.getElementById('modalPassword').value.trim();
+            const err = document.getElementById('loginErrorMsg');
+            err.classList.add('hidden');
+
+            if (!u || !p) {
+                err.innerText = "Please enter both credentials.";
+                err.classList.remove('hidden');
+                return;
+            }
+
+            const ok = await verifyCredentialsWithServer(u, p);
+            if (ok) {
+                activeAdmin = { username: u, password: p };
+                localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(activeAdmin));
+                document.getElementById('badgeUser').innerText = u;
+                document.getElementById('authStatusBadge').classList.remove('hidden');
+                document.getElementById('loginModal').classList.add('hidden');
+                showToast("Logged in securely!", "info");
+            } else {
+                err.innerText = "Invalid credentials. Access Denied.";
+                err.classList.remove('hidden');
+            }
+        }
+
+        async function handleLogout() {
+            const confirmed = await openCustomDialog({
+                title: "Disconnect Admin Session",
+                message: "Are you sure you want to clear your cached admin login credentials?",
+                confirmText: "Logout",
+                cancelText: "Stay Logged In"
+            });
+            if (confirmed) {
+                localStorage.removeItem(AUTH_STORAGE_KEY);
+                location.reload();
+            }
+        }
+
+        function getStoredTasks() {
+            try {
+                const raw = localStorage.getItem(TASKS_STORAGE_KEY);
+                return raw ? JSON.parse(raw) : [];
+            } catch(e) {
+                return [];
+            }
+        }
+
+        function saveStoredTasks(tasks) {
+            try {
+                localStorage.setItem(TASKS_STORAGE_KEY, JSON.stringify(tasks));
+            } catch (e) {
+                console.warn("Storage quota tight, trimming fallback dataUrls from localStorage JSON.");
+                const slimmed = tasks.map(t => ({ ...t, coverThumbMini: null }));
+                try { localStorage.setItem(TASKS_STORAGE_KEY, JSON.stringify(slimmed)); } catch (err) {}
+            }
+            updateTasksBadge();
+        }
+
+        function createCleanTaskObject() {
+            return {
+                id: "task_" + Date.now() + "_" + Math.floor(Math.random() * 1000),
+                title: "",
+                slug: "",
+                content: "<p><br></p>",
+                featuredHash: null,
+                featuredFileName: null,
+                hasLocalCover: false,
+                coverThumbMini: null,
+                isPreviewed: false,
+                previewSlug: null,
+                updatedAt: Date.now()
+            };
+        }
+
+        async function initializeTaskSystem() {
+            let tasks = getStoredTasks();
+            currentTaskId = localStorage.getItem(ACTIVE_TASK_ID_KEY);
+
+            if (!tasks || tasks.length === 0) {
+                const initialTask = createCleanTaskObject();
+                tasks = [initialTask];
+                saveStoredTasks(tasks);
+                currentTaskId = initialTask.id;
+                localStorage.setItem(ACTIVE_TASK_ID_KEY, currentTaskId);
+            }
+
+            let current = tasks.find(t => t.id === currentTaskId);
+            if (!current) {
+                current = tasks[0];
+                currentTaskId = current.id;
+                localStorage.setItem(ACTIVE_TASK_ID_KEY, currentTaskId);
+            }
+
+            await loadTaskIntoWorkspace(current);
+        }
+
+        async function loadTaskIntoWorkspace(task) {
+            document.getElementById('postTitle').value = task.title || "";
+            document.getElementById('titleCharCount').innerText = `${(task.title || "").length} chars`;
+            document.getElementById('customSlug').value = task.slug || "";
+            document.getElementById('editorContent').innerHTML = task.content || "<p><br></p>";
+            if (isRawHtmlMode) {
+                document.getElementById('rawHtmlEditor').value = task.content || "";
+            }
+
+            rehydrateInteractiveBlocksInEditor();
+
+            // Restore Cover Image (from Server Hash OR IndexedDB Vault OR Task Fallback)
+            activeFeaturedHash = task.featuredHash || null;
+            pendingFeaturedFile = null;
+            pendingFeaturedDataUrl = null;
+            pendingFeaturedFileName = task.featuredFileName || "cover.jpg";
+
+            const vaultCover = await getVaultItem(`cover_${task.id}`) || task.coverThumbMini || null;
+
+            if (activeFeaturedHash) {
+                document.getElementById('featuredImgThumb').src = `/img_asset/${activeFeaturedHash}`;
+                document.getElementById('featuredImgHashText').innerText = activeFeaturedHash;
+                document.getElementById('featuredImgStateSub').innerText = "Synced on Server";
+                document.getElementById('featuredImgPreviewWrap').classList.remove('hidden');
+                document.getElementById('featuredImgStatus').classList.add('hidden');
+            } else if (vaultCover) {
+                pendingFeaturedDataUrl = vaultCover;
+                pendingFeaturedFile = dataURLtoFile(vaultCover, pendingFeaturedFileName);
+                document.getElementById('featuredImgThumb').src = vaultCover;
+                document.getElementById('featuredImgHashText').innerText = pendingFeaturedFileName;
+                document.getElementById('featuredImgStateSub').innerText = "Saved in Task Cache";
+                document.getElementById('featuredImgPreviewWrap').classList.remove('hidden');
+                document.getElementById('featuredImgStatus').classList.add('hidden');
+            } else {
+                resetFeaturedImageUI();
+            }
+
+            // Restore Pending Inline Images from IndexedDB Vault
+            pendingFilesRegistry.clear();
+            const pendingWrappers = document.querySelectorAll('#editorContent .article-img-wrap[data-temp-id]');
+            for (const wrap of pendingWrappers) {
+                const tempId = wrap.getAttribute('data-temp-id');
+                const imgEl = wrap.querySelector('img');
+                let savedDataUrl = await getVaultItem(`inline_${tempId}`);
+                if (!savedDataUrl && imgEl && imgEl.src && imgEl.src.startsWith('data:image')) {
+                    savedDataUrl = imgEl.src;
+                }
+                if (savedDataUrl) {
+                    if (imgEl) imgEl.src = savedDataUrl;
+                    const fileObj = dataURLtoFile(savedDataUrl, `${tempId}.jpg`);
+                    if (fileObj) {
+                        pendingFilesRegistry.set(tempId, { file: fileObj, dataUrl: savedDataUrl });
+                    }
+                }
+            }
+
+            setPreviewGateState(Boolean(task.isPreviewed && task.previewSlug), task.previewSlug || null);
+            updateDraftBadgeLabel(task.title);
+            updatePendingUploadCount();
+            updateStats();
+            updateSerpSnippet();
+        }
+
+        function updateDraftBadgeLabel(title) {
+            const label = title ? `Draft: ${title}` : "Draft: Untitled";
+            document.getElementById('activeDraftBadge').innerText = label;
+        }
+
+        async function createNewBlankDraft() {
+            await persistCurrentWorkspaceToCache();
+            const newTask = createCleanTaskObject();
+            const tasks = getStoredTasks();
+            tasks.unshift(newTask);
+            saveStoredTasks(tasks);
+
+            currentTaskId = newTask.id;
+            localStorage.setItem(ACTIVE_TASK_ID_KEY, currentTaskId);
+            await loadTaskIntoWorkspace(newTask);
+            showToast("New blank workspace loaded!", "info");
+        }
+
+        async function switchTask(taskId) {
+            if (taskId === currentTaskId) {
+                toggleTaskManagerModal();
+                return;
+            }
+            await persistCurrentWorkspaceToCache();
+
+            const tasks = getStoredTasks();
+            const target = tasks.find(t => t.id === taskId);
+            if (target) {
+                currentTaskId = target.id;
+                localStorage.setItem(ACTIVE_TASK_ID_KEY, currentTaskId);
+                await loadTaskIntoWorkspace(target);
+                toggleTaskManagerModal();
+                showToast("Workspace draft switched! Thumbnail & content restored.", "info");
+            }
+        }
+
+        async function purgeTaskFromStorageAndVault(taskId) {
+            clearTimeout(autoSaveTimer);
+            await deleteVaultItem(`cover_${taskId}`);
+
+            let tasks = getStoredTasks().filter(t => t.id !== taskId);
+            if (tasks.length === 0) {
+                const freshBlank = createCleanTaskObject();
+                tasks = [freshBlank];
+            }
+            saveStoredTasks(tasks);
+
+            if (currentTaskId === taskId) {
+                currentTaskId = tasks[0].id;
+                localStorage.setItem(ACTIVE_TASK_ID_KEY, currentTaskId);
+            }
+            return tasks[0];
+        }
+
+        async function deleteTask(taskId, event) {
+            if (event) event.stopPropagation();
+            const confirmed = await openCustomDialog({
+                title: "Delete Draft Task",
+                message: "Delete this draft and its cached media permanently from your workspace?",
+                confirmText: "Delete Draft",
+                cancelText: "Cancel"
+            });
+            if (!confirmed) return;
+
+            const nextActiveTask = await purgeTaskFromStorageAndVault(taskId);
+            await loadTaskIntoWorkspace(nextActiveTask);
+            await renderTaskManagerModalList();
+            showToast("Draft task deleted permanently", "warn");
+        }
+
+        async function persistCurrentWorkspaceToCache() {
+            if (isPublishingCompleted || !currentTaskId) return;
+            const tasks = getStoredTasks();
+            const idx = tasks.findIndex(t => t.id === currentTaskId);
+            if (idx === -1) return;
+
+            const title = document.getElementById('postTitle').value;
+            const content = isRawHtmlMode ? document.getElementById('rawHtmlEditor').value : document.getElementById('editorContent').innerHTML;
+            const slug = document.getElementById('customSlug').value;
+
+            if (pendingFeaturedDataUrl) {
+                await saveVaultItem(`cover_${currentTaskId}`, pendingFeaturedDataUrl);
+            } else if (!activeFeaturedHash) {
+                await deleteVaultItem(`cover_${currentTaskId}`);
+            }
+
+            tasks[idx] = {
+                ...tasks[idx],
+                title: title,
+                slug: slug,
+                content: content,
+                featuredHash: activeFeaturedHash,
+                featuredFileName: pendingFeaturedFileName,
+                hasLocalCover: Boolean(pendingFeaturedDataUrl),
+                coverThumbMini: pendingFeaturedDataUrl || null,
+                isPreviewed: hasPreviewedCurrentState,
+                previewSlug: generatedSlugCache,
+                updatedAt: Date.now()
+            };
+
+            saveStoredTasks(tasks);
+            updateDraftBadgeLabel(title);
+        }
+
+        async function toggleTaskManagerModal() {
+            const modal = document.getElementById('taskManagerModal');
+            if (modal.classList.contains('hidden')) {
+                await persistCurrentWorkspaceToCache();
+                await renderTaskManagerModalList();
+                modal.classList.remove('hidden');
+            } else {
+                modal.classList.add('hidden');
+            }
+        }
+
+        async function renderTaskManagerModalList() {
+            const container = document.getElementById('tasksListContainer');
+            const tasks = getStoredTasks();
+            container.innerHTML = "";
+
+            for (const t of tasks) {
+                const isActive = t.id === currentTaskId;
+                const dateStr = new Date(t.updatedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', month: 'short', day: 'numeric' });
+                
+                let thumbSrc = null;
+                if (t.featuredHash) {
+                    thumbSrc = `/img_asset/${t.featuredHash}`;
+                } else if (t.hasLocalCover || t.coverThumbMini) {
+                    thumbSrc = await getVaultItem(`cover_${t.id}`) || t.coverThumbMini;
+                }
+
+                const item = document.createElement('div');
+                item.className = `p-3.5 rounded-2xl border transition cursor-pointer flex items-center justify-between gap-3 ${
+                    isActive 
+                    ? 'bg-green-100/80 border-green-400 shadow-sm' 
+                    : 'bg-white/80 hover:bg-green-50 border-green-200'
+                }`;
+                item.onclick = () => switchTask(t.id);
+
+                const thumbBadge = thumbSrc
+                    ? `<img src="${thumbSrc}" class="w-11 h-11 rounded-xl object-cover border border-green-300 shrink-0 shadow-sm">`
+                    : `<div class="w-11 h-11 rounded-xl ${isActive ? 'bg-green-600 text-white' : 'bg-green-100 text-green-700'} flex items-center justify-center text-sm shrink-0">
+                         <i class="fas fa-file-lines"></i>
+                       </div>`;
+
+                item.innerHTML = `
+                    <div class="flex items-center gap-3 truncate">
+                        ${thumbBadge}
+                        <div class="truncate">
+                            <h4 class="font-bold text-sm text-green-950 truncate">${t.title || 'Untitled Draft'}</h4>
+                            <p class="text-[11px] text-gray-500 font-medium">Last updated: ${dateStr}</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-2 shrink-0">
+                        ${isActive ? '<span class="text-[10px] font-bold bg-green-200 text-green-900 px-2 py-0.5 rounded-full">ACTIVE</span>' : ''}
+                        <button onclick="deleteTask('${t.id}', event)" class="p-2 text-gray-400 hover:text-red-500 rounded-lg transition" title="Delete Draft">
+                            <i class="fas fa-trash-can text-xs"></i>
+                        </button>
+                    </div>
+                `;
+                container.appendChild(item);
+            }
+        }
+
+        function updateTasksBadge() {
+            const count = getStoredTasks().length;
+            document.getElementById('savedWorkCountBadge').innerText = count;
+        }
+
+        let autoSaveTimer = null;
+
+        // Cleanly sanitize pasted HTML from Docs/Word/Web so body text is NEVER giant
+        function sanitizePastedHTML(rawHtml, fallbackPlainText) {
+            if (!rawHtml && fallbackPlainText) {
+                return fallbackPlainText
+                    .split(/\r?\n\r?\n|\r?\n/)
+                    .map(line => line.trim())
+                    .filter(Boolean)
+                    .map(line => `<p>${line.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</p>`)
+                    .join('');
+            }
+
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(rawHtml, 'text/html');
+
+            // Remove style, script, meta, link, title tags
+            doc.querySelectorAll('style, script, meta, link, title, xml, o\\:p').forEach(el => el.remove());
+
+            // Recursively clean nodes
+            function cleanNode(node) {
+                if (node.nodeType === Node.TEXT_NODE) {
+                    return document.createTextNode(node.nodeValue);
+                }
+                if (node.nodeType !== Node.ELEMENT_NODE) {
+                    return null;
+                }
+
+                const tag = node.tagName.toUpperCase();
+
+                // Check if a span/font had bold or italic inline style from Google Docs before unwrapping
+                const styleAttr = (node.getAttribute('style') || '').toLowerCase();
+                const isBoldSpan = styleAttr.includes('font-weight: 700') || styleAttr.includes('font-weight:700') || styleAttr.includes('font-weight: bold');
+                const isItalicSpan = styleAttr.includes('font-style: italic') || styleAttr.includes('font-style:italic');
+
+                // Allowed semantic tags
+                const allowedBlockTags = ['P', 'H1', 'H2', 'H3', 'H4', 'UL', 'OL', 'LI', 'BLOCKQUOTE', 'PRE', 'TABLE', 'THEAD', 'TBODY', 'TR', 'TH', 'TD', 'HR'];
+                const allowedInlineTags = ['B', 'STRONG', 'I', 'EM', 'U', 'S', 'CODE', 'A', 'BR', 'IMG'];
+
+                let targetEl = null;
+
+                if (allowedBlockTags.includes(tag) || allowedInlineTags.includes(tag)) {
+                    targetEl = document.createElement(tag.toLowerCase());
+                    if (tag === 'A' && node.getAttribute('href')) {
+                        targetEl.setAttribute('href', node.getAttribute('href'));
+                        targetEl.setAttribute('target', '_blank');
+                    }
+                    if (tag === 'IMG' && node.getAttribute('src')) {
+                        targetEl.setAttribute('src', node.getAttribute('src'));
+                        targetEl.setAttribute('alt', node.getAttribute('alt') || 'Article image');
+                    }
+                } else if (tag === 'H5' || tag === 'H6') {
+                    targetEl = document.createElement('h4');
+                } else if (tag === 'DIV' || tag === 'SECTION' || tag === 'ARTICLE') {
+                    // Convert generic containers into clean paragraphs if they don't contain block children
+                    const hasBlockChild = Array.from(node.children).some(c =>
+                        ['P', 'H1', 'H2', 'H3', 'H4', 'UL', 'OL', 'TABLE', 'BLOCKQUOTE', 'PRE', 'DIV'].includes(c.tagName?.toUpperCase())
+                    );
+                    targetEl = hasBlockChild ? document.createDocumentFragment() : document.createElement('p');
+                } else {
+                    // Unwrap SPAN, FONT, etc. (strips all inline font-size!)
+                    targetEl = document.createDocumentFragment();
+                }
+
+                // Append cleaned children
+                Array.from(node.childNodes).forEach(child => {
+                    const cleanedChild = cleanNode(child);
+                    if (cleanedChild) targetEl.appendChild(cleanedChild);
+                });
+
+                // Preserve Google Docs bold/italic without keeping any font-size
+                if (tag === 'SPAN' && (isBoldSpan || isItalicSpan)) {
+                    let wrapper = targetEl;
+                    if (isBoldSpan) {
+                        const b = document.createElement('strong');
+                        b.appendChild(wrapper);
+                        wrapper = b;
+                    }
+                    if (isItalicSpan) {
+                        const i = document.createElement('em');
+                        i.appendChild(wrapper);
+                        wrapper = i;
+                    }
+                    return wrapper;
+                }
+
+                return targetEl;
+            }
+
+            const fragment = document.createDocumentFragment();
+            Array.from(doc.body.childNodes).forEach(node => {
+                const cleaned = cleanNode(node);
+                if (cleaned) fragment.appendChild(cleaned);
+            });
+
+            const container = document.createElement('div');
+            container.appendChild(fragment);
+
+            // Split double <br><br> inside paragraphs so each paragraph is an independent <p> block
+            container.querySelectorAll('p').forEach(p => {
+                if (p.innerHTML.includes('<br><br>') || p.innerHTML.includes('<br> <br>')) {
+                    const parts = p.innerHTML.split(/(?:<br\s*\/?>\s*){2,}/i);
+                    if (parts.length > 1) {
+                        const frag = document.createDocumentFragment();
+                        parts.forEach(part => {
+                            if (part.trim()) {
+                                const newP = document.createElement('p');
+                                newP.innerHTML = part.trim();
+                                frag.appendChild(newP);
+                            }
+                        });
+                        p.replaceWith(frag);
+                    }
+                }
+            });
+
+            // Wrap any stray top-level text nodes or inline elements into <p>
+            const finalContainer = document.createElement('div');
+            let currentP = null;
+            Array.from(container.childNodes).forEach(node => {
+                const isBlock = node.nodeType === Node.ELEMENT_NODE &&
+                    ['P', 'H1', 'H2', 'H3', 'H4', 'UL', 'OL', 'BLOCKQUOTE', 'PRE', 'TABLE', 'HR'].includes(node.tagName.toUpperCase());
+
+                if (isBlock) {
+                    currentP = null;
+                    finalContainer.appendChild(node);
+                } else if (node.nodeType === Node.ELEMENT_NODE && node.tagName.toUpperCase() === 'BR') {
+                    currentP = null;
+                } else {
+                    const textVal = node.textContent || '';
+                    if (textVal.trim() || (node.nodeType === Node.ELEMENT_NODE && node.tagName === 'IMG')) {
+                        if (!currentP) {
+                            currentP = document.createElement('p');
+                            finalContainer.appendChild(currentP);
+                        }
+                        currentP.appendChild(node);
+                    }
+                }
+            });
+
+            return finalContainer.innerHTML || `<p>${(fallbackPlainText || '').replace(/</g, '&lt;').replace(/>/g, '&gt;')}</p>`;
+        }
+
+        function setupEditorEvents() {
+            const ed = document.getElementById('editorContent');
+            const titleInput = document.getElementById('postTitle');
+            const slugInput = document.getElementById('customSlug');
+
+            const handleContentChange = () => {
+                if (hasPreviewedCurrentState) {
+                    setPreviewGateState(false);
+                }
+                updateStats();
+                updateSerpSnippet();
+                triggerAutoSaveLocal();
+            };
+
+            ed.addEventListener('input', handleContentChange);
+            titleInput.addEventListener('input', () => {
+                document.getElementById('titleCharCount').innerText = `${titleInput.value.length} chars`;
+                handleContentChange();
+            });
+            slugInput.addEventListener('input', handleContentChange);
+
+            // Real-time Cursor & Selection Heading Inspector
+            document.addEventListener('selectionchange', () => {
+                inspectCurrentCursorBlock();
+            });
+            ed.addEventListener('keyup', inspectCurrentCursorBlock);
+            ed.addEventListener('mouseup', () => setTimeout(inspectCurrentCursorBlock, 15));
+
+            // Smart Paste Handler (Images + Clean Normalized Article Text)
+            ed.addEventListener('paste', async (e) => {
+                const clipboard = e.clipboardData || e.originalEvent?.clipboardData;
+                if (!clipboard) return;
+
+                // 1. Check if pasting an image file
+                const items = clipboard.items;
+                if (items) {
+                    for (let item of items) {
+                        if (item.type.indexOf('image') === 0) {
+                            e.preventDefault();
+                            const file = item.getAsFile();
+                            if (file) {
+                                await queueLocalDeferredImage(file);
+                                showToast("Image pasted & cached in task!", "info");
+                            }
+                            return;
+                        }
+                    }
+                }
+
+                // 2. Intercept HTML / Text Paste so body text never becomes huge
+                e.preventDefault();
+                const rawHtml = clipboard.getData('text/html');
+                const plainText = clipboard.getData('text/plain');
+                const cleanHtml = sanitizePastedHTML(rawHtml, plainText);
+
+                // If cursor is currently inside an H1-H4 and user pastes multiple paragraphs, exit heading first
+                const sel = window.getSelection();
+                if (sel && sel.rangeCount > 0) {
+                    const activeHeading = findClosestBlockInEditor(sel.anchorNode);
+                    if (activeHeading && ['H1', 'H2', 'H3', 'H4'].includes(activeHeading.tagName?.toUpperCase()) && cleanHtml.includes('<p>')) {
+                        const p = document.createElement('p');
+                        p.innerHTML = '<br>';
+                        activeHeading.after(p);
+                        const newRange = document.createRange();
+                        newRange.setStart(p, 0);
+                        newRange.collapse(true);
+                        sel.removeAllRanges();
+                        sel.addRange(newRange);
+                    }
+                }
+
+                document.execCommand('insertHTML', false, cleanHtml);
+                rehydrateInteractiveBlocksInEditor();
+                handleContentChange();
+            });
+        }
+
+        function findClosestBlockInEditor(node) {
+            const ed = document.getElementById('editorContent');
+            if (!node || !ed.contains(node)) return null;
+            let curr = node.nodeType === Node.TEXT_NODE ? node.parentElement : node;
+            while (curr && curr !== ed) {
+                const tag = curr.tagName ? curr.tagName.toUpperCase() : '';
+                if (['H1', 'H2', 'H3', 'H4', 'P', 'BLOCKQUOTE', 'PRE', 'LI', 'DIV'].includes(tag)) {
+                    return curr;
+                }
+                curr = curr.parentElement;
+            }
+            return null;
+        }
+
+        function inspectCurrentCursorBlock() {
+            const ed = document.getElementById('editorContent');
+            const bubble = document.getElementById('selectionBubble');
+            const sel = window.getSelection();
+
+            if (!sel || sel.rangeCount === 0 || !ed.contains(sel.anchorNode)) {
+                bubble.classList.add('hidden');
+                return;
+            }
+
+            const blockEl = findClosestBlockInEditor(sel.anchorNode);
+            let tag = blockEl && blockEl.tagName ? blockEl.tagName.toUpperCase() : 'P';
+            if (tag === 'DIV' || tag === 'LI') tag = 'P';
+
+            // Update Toolbar Dropdown & Live Tag Badge
+            const selectEl = document.getElementById('headingSelect');
+            if (selectEl) {
+                selectEl.value = ['H1', 'H2', 'H3', 'H4', 'P'].includes(tag) ? tag : 'P';
+            }
+
+            const badgeEl = document.getElementById('currentBlockBadge');
+            const removeHeadingBtn = document.getElementById('removeHeadingBtn');
+
+            if (['H1', 'H2', 'H3', 'H4'].includes(tag)) {
+                badgeEl.innerText = `Active: ${tag}`;
+                badgeEl.className = "text-[11px] font-mono font-bold text-emerald-950 bg-emerald-200 px-1.5 py-0.5 rounded";
+                removeHeadingBtn.classList.remove('hidden');
+            } else if (tag === 'BLOCKQUOTE') {
+                badgeEl.innerText = "Quote";
+                removeHeadingBtn.classList.remove('hidden');
+            } else {
+                badgeEl.innerText = "Body (P)";
+                badgeEl.className = "text-[11px] font-mono font-bold text-emerald-900";
+                removeHeadingBtn.classList.add('hidden');
+            }
+
+            // Update Toolbar Bold/Italic active states
+            document.getElementById('btnBold')?.classList.toggle('active-format', document.queryCommandState('bold'));
+            document.getElementById('btnItalic')?.classList.toggle('active-format', document.queryCommandState('italic'));
+            document.getElementById('btnUnderline')?.classList.toggle('active-format', document.queryCommandState('underline'));
+            document.getElementById('btnStrike')?.classList.toggle('active-format', document.queryCommandState('strikeThrough'));
+
+            // Show Floating Selection Bubble if text is highlighted and feature is enabled
+            const selectedText = sel.toString().trim();
+            if (isFloatingBubbleEnabled && selectedText.length > 0) {
+                const range = sel.getRangeAt(0);
+                const rect = range.getBoundingClientRect();
+                if (rect.width > 0) {
+                    document.getElementById('bubbleTagIndicator').innerText = ['H1', 'H2', 'H3', 'H4'].includes(tag) ? tag : 'Body';
+                    document.querySelectorAll('#selectionBubble .bubble-btn[data-tag]').forEach(btn => {
+                        btn.classList.toggle('active-bubble', btn.getAttribute('data-tag') === tag);
+                    });
+                    document.getElementById('bubbleBold').classList.toggle('active-bubble', document.queryCommandState('bold'));
+                    document.getElementById('bubbleItalic').classList.toggle('active-bubble', document.queryCommandState('italic'));
+
+                    bubble.classList.remove('hidden');
+                    const bw = bubble.offsetWidth || 310;
+                    const topPos = Math.max(12, rect.top - 48);
+                    const leftPos = Math.min(window.innerWidth - bw - 12, Math.max(12, rect.left + (rect.width / 2) - (bw / 2)));
+                    bubble.style.top = `${topPos}px`;
+                    bubble.style.left = `${leftPos}px`;
+                }
+            } else {
+                bubble.classList.add('hidden');
+            }
+        }
+
+        function closeSelectionBubble() {
+            document.getElementById('selectionBubble').classList.add('hidden');
+        }
+
+        function toggleBubbleFeature() {
+            isFloatingBubbleEnabled = !isFloatingBubbleEnabled;
+            const btn = document.getElementById('bubbleToggleBtn');
+            if (isFloatingBubbleEnabled) {
+                btn.classList.add('bg-emerald-50', 'text-emerald-700');
+                btn.classList.remove('text-gray-400');
+                showToast("Floating selection toolbar enabled", "info");
+            } else {
+                closeSelectionBubble();
+                btn.classList.remove('bg-emerald-50', 'text-emerald-700');
+                btn.classList.add('text-gray-400');
+                showToast("Floating selection toolbar hidden", "info");
+            }
+        }
+
+        function triggerAutoSaveLocal() {
+            if (isPublishingCompleted) return;
+            clearTimeout(autoSaveTimer);
+            document.getElementById('autoSaveIndicator').innerHTML = `<i class="fas fa-pencil text-[8px] text-amber-500"></i> Saving cache...`;
+            autoSaveTimer = setTimeout(async () => {
+                if (isPublishingCompleted) return;
+                await persistCurrentWorkspaceToCache();
+                document.getElementById('autoSaveIndicator').innerHTML = `<i class="fas fa-circle-check text-[8px] text-green-500"></i> All changes cached locally`;
+            }, 650);
+        }
+
+        async function queueLocalDeferredImage(file) {
+            const tempId = "local_img_" + Date.now() + "_" + Math.floor(Math.random() * 1000);
+            const dataUrl = await fileToCompressedDataURL(file, 1500, 0.84);
+            const safeFile = dataURLtoFile(dataUrl, file.name) || file;
+
+            pendingFilesRegistry.set(tempId, { file: safeFile, dataUrl });
+            await saveVaultItem(`inline_${tempId}`, dataUrl);
+
+            insertInlineImageToEditor(dataUrl, tempId);
+            updatePendingUploadCount();
+        }
+
+        async function handleDeferredInlineImageSelect(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            await queueLocalDeferredImage(file);
+            showToast("Graphic inserted & cached! Will upload when previewed.", "info");
+            event.target.value = "";
+        }
+
+        function insertInlineImageToEditor(imgSrc, tempId) {
+            const wrapper = document.createElement("div");
+            wrapper.className = "article-img-wrap text-center my-6 block pending-upload";
+            wrapper.contentEditable = "false";
+            wrapper.setAttribute("data-temp-id", tempId);
+            
+            wrapper.innerHTML = `
+                <img src="${imgSrc}" alt="Article graphic" class="rounded-2xl max-w-full mx-auto shadow-md">
+                <div class="img-toolbar" contenteditable="false">
+                    <span class="img-tool-btn" title="Edit Alt Tag" onclick="editImgAlt(this)"><i class="fas fa-font"></i> Alt</span>
+                    <span class="img-tool-btn" title="Align Left" onclick="alignImg(this, 'left')"><i class="fas fa-align-left"></i></span>
+                    <span class="img-tool-btn" title="Center" onclick="alignImg(this, 'center')"><i class="fas fa-align-center"></i></span>
+                    <span class="img-tool-btn text-red-300 hover:text-red-400" title="Delete Image" onclick="deleteImgWrapper(this)"><i class="fas fa-trash"></i></span>
+                </div>
+            `;
+
+            insertNodeAtSelection(wrapper);
+            updateStats();
+            triggerAutoSaveLocal();
+        }
+
+        async function editImgAlt(btn) {
+            const img = btn.closest('.article-img-wrap').querySelector('img');
+            const currentAlt = img.getAttribute('alt') || "";
+            const newAlt = await openCustomDialog({
+                title: "Image SEO Alt Text",
+                message: "Provide a descriptive Alt attribute for this image:",
+                showInput: true,
+                defaultValue: currentAlt,
+                confirmText: "Save Alt"
+            });
+            if (newAlt !== null) {
+                img.setAttribute('alt', newAlt.trim());
+                triggerAutoSaveLocal();
+            }
+        }
+
+        function alignImg(btn, alignment) {
+            const wrap = btn.closest('.article-img-wrap');
+            if (alignment === 'left') {
+                wrap.style.display = 'block';
+                wrap.style.margin = '1.5rem auto 1.5rem 0';
+            } else {
+                wrap.style.display = 'block';
+                wrap.style.margin = '1.5rem auto';
+            }
+            triggerAutoSaveLocal();
+        }
+
+        async function deleteImgWrapper(btn) {
+            const wrap = btn.closest('.article-img-wrap');
+            if (!wrap) return;
+            const tempId = wrap.getAttribute('data-temp-id');
+            if (tempId) {
+                pendingFilesRegistry.delete(tempId);
+                await deleteVaultItem(`inline_${tempId}`);
+            }
+            wrap.remove();
+            updatePendingUploadCount();
+            updateStats();
+            triggerAutoSaveLocal();
+            showToast("Image removed from article", "info");
+        }
+
+        async function handleFeaturedImageSelect(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const compressedDataUrl = await fileToCompressedDataURL(file, 1300, 0.84);
+            pendingFeaturedDataUrl = compressedDataUrl;
+            pendingFeaturedFileName = file.name;
+            pendingFeaturedFile = dataURLtoFile(compressedDataUrl, file.name) || file;
+            activeFeaturedHash = null;
+
+            if (currentTaskId && compressedDataUrl) {
+                await saveVaultItem(`cover_${currentTaskId}`, compressedDataUrl);
+            }
+
+            document.getElementById('featuredImgThumb').src = compressedDataUrl;
+            document.getElementById('featuredImgHashText').innerText = file.name;
+            document.getElementById('featuredImgStateSub').innerText = "Saved in Task Cache";
+            document.getElementById('featuredImgPreviewWrap').classList.remove('hidden');
+            document.getElementById('featuredImgStatus').classList.add('hidden');
+
+            setPreviewGateState(false);
+            updatePendingUploadCount();
+            await persistCurrentWorkspaceToCache();
+            showToast("Cover thumbnail saved in task cache!", "info");
+            event.target.value = "";
+        }
+
+        function resetFeaturedImageUI() {
+            pendingFeaturedFile = null;
+            pendingFeaturedDataUrl = null;
+            activeFeaturedHash = null;
+            document.getElementById('featuredImgPreviewWrap').classList.add('hidden');
+            document.getElementById('featuredImgStatus').classList.remove('hidden');
+            updatePendingUploadCount();
+        }
+
+        async function clearFeaturedImage() {
+            resetFeaturedImageUI();
+            if (currentTaskId) {
+                await deleteVaultItem(`cover_${currentTaskId}`);
+            }
+            setPreviewGateState(false);
+            await persistCurrentWorkspaceToCache();
+        }
+
+        function updatePendingUploadCount() {
+            const inlineCount = document.querySelectorAll('#editorContent .article-img-wrap[data-temp-id]').length;
+            let count = inlineCount;
+            if ((pendingFeaturedDataUrl || pendingFeaturedFile) && !activeFeaturedHash) count += 1;
+
+            const badge = document.getElementById('pendingUploadIndicator');
+            const countEl = document.getElementById('pendingUploadCount');
+
+            if (count > 0) {
+                countEl.innerText = count;
+                badge.classList.remove('hidden');
+            } else {
+                badge.classList.add('hidden');
+            }
+        }
+
+        async function compressImageIfLarge(file, maxBytes = 8 * 1024 * 1024) {
+            if (!file || file.size <= maxBytes) return file;
+            const dataUrl = await fileToCompressedDataURL(file, 1900, 0.82);
+            return dataURLtoFile(dataUrl, file.name.replace(/\.[^/.]+$/, ".jpg")) || file;
+        }
+
+        async function syncAllPendingImagesToServer() {
+            const wrappers = Array.from(document.querySelectorAll('#editorContent .article-img-wrap[data-temp-id]'));
+            const hasCoverToUpload = Boolean((pendingFeaturedFile || pendingFeaturedDataUrl) && !activeFeaturedHash);
+            const totalToUpload = wrappers.length + (hasCoverToUpload ? 1 : 0);
+            
+            if (totalToUpload === 0) {
+                return true;
+            }
+
+            showLoading("Synchronizing Media Assets", `Uploading ${totalToUpload} pending graphic(s)...`);
+            let completed = 0;
+
+            const updateProg = () => {
+                const pct = Math.round((completed / totalToUpload) * 100);
+                document.getElementById('loadingProgressBar').style.width = pct + '%';
+            };
+
+            // 1. Sync Featured Cover if pending
+            if (hasCoverToUpload) {
+                try {
+                    const fileObj = pendingFeaturedFile || dataURLtoFile(pendingFeaturedDataUrl, pendingFeaturedFileName || "cover.jpg");
+                    if (fileObj) {
+                        const safeFile = await compressImageIfLarge(fileObj);
+                        const formData = new FormData();
+                        formData.append("image", safeFile);
+                        formData.append("username", activeAdmin.username);
+                        formData.append("password", activeAdmin.password);
+
+                        const res = await fetch("/admin/editor/upload-image", { method: "POST", body: formData });
+                        const data = await res.json();
+                        if (res.ok && data.status === "success") {
+                            activeFeaturedHash = data.hash;
+                            pendingFeaturedFile = null;
+                            pendingFeaturedDataUrl = null;
+                            if (currentTaskId) await deleteVaultItem(`cover_${currentTaskId}`);
+                            document.getElementById('featuredImgThumb').src = data.url;
+                            document.getElementById('featuredImgHashText').innerText = data.hash;
+                            document.getElementById('featuredImgStateSub').innerText = "Synced on Server";
+                        }
+                    }
+                } catch(e) {
+                    console.error("Cover upload error:", e);
+                }
+                completed++;
+                updateProg();
+            }
+
+            // 2. Sync Inline Images in Editor
+            for (let wrap of wrappers) {
+                const tempId = wrap.getAttribute('data-temp-id');
+                const imgTag = wrap.querySelector('img');
+                let fileObj = pendingFilesRegistry.get(tempId)?.file;
+
+                if (!fileObj) {
+                    const savedDataUrl = await getVaultItem(`inline_${tempId}`) || (imgTag?.src?.startsWith('data:') ? imgTag.src : null);
+                    if (savedDataUrl) fileObj = dataURLtoFile(savedDataUrl, `${tempId}.jpg`);
+                }
+
+                if (fileObj) {
+                    try {
+                        const safeFile = await compressImageIfLarge(fileObj);
+                        const formData = new FormData();
+                        formData.append("image", safeFile);
+                        formData.append("username", activeAdmin.username);
+                        formData.append("password", activeAdmin.password);
+
+                        const res = await fetch("/admin/editor/upload-image", { method: "POST", body: formData });
+                        const data = await res.json();
+
+                        if (res.ok && data.status === "success") {
+                            imgTag.src = data.url;
+                            wrap.removeAttribute('data-temp-id');
+                            wrap.classList.remove('pending-upload');
+                            pendingFilesRegistry.delete(tempId);
+                            await deleteVaultItem(`inline_${tempId}`);
+                        }
+                    } catch(err) {
+                        console.error("Inline upload error:", err);
+                    }
+                }
+                completed++;
+                updateProg();
+            }
+
+            updatePendingUploadCount();
+            await persistCurrentWorkspaceToCache();
+            return true;
+        }
+
+        function cleanEditorContentForExport() {
+            if (isRawHtmlMode) {
+                document.getElementById('editorContent').innerHTML = document.getElementById('rawHtmlEditor').value;
+            }
+            const clone = document.getElementById('editorContent').cloneNode(true);
+            clone.querySelectorAll('.img-toolbar, .editor-block-toolbar').forEach(el => el.remove());
+            clone.querySelectorAll('[contenteditable]').forEach(el => el.removeAttribute('contenteditable'));
+            return clone.innerHTML.trim();
+        }
+
+        async function saveDraftToServer() {
+            const title = document.getElementById('postTitle').value.trim();
+            const content = cleanEditorContentForExport();
+            const slug = document.getElementById('customSlug').value.trim();
+
+            if (!title) {
+                showToast("Please enter a title for your article first!", "warn");
+                document.getElementById('postTitle').focus();
+                return null;
+            }
+
+            if (!content || content === "<br>" || content === "<p><br></p>") {
+                showToast("Please write some content in the editor before continuing.", "warn");
+                return null;
+            }
+
+            await syncAllPendingImagesToServer();
+
+            showLoading("Saving Draft to Server", "Generating preview slug and rendering layout...");
+
+            try {
+                const payload = {
+                    username: activeAdmin.username,
+                    password: activeAdmin.password,
+                    title: title,
+                    content_html: cleanEditorContentForExport(),
+                    featured_hash: activeFeaturedHash,
+                    wp_slug: slug || null
+                };
+
+                const res = await fetch("/admin/editor/save-draft", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(payload)
+                });
+                const data = await res.json();
+                hideLoading();
+
+                if (res.ok && data.status === "success") {
+                    generatedSlugCache = data.wp_slug;
+                    setPreviewGateState(true, data.wp_slug);
+                    await persistCurrentWorkspaceToCache();
+                    return data;
+                } else {
+                    showToast("Draft Error: " + (data.detail || "Server error"), "error");
+                    return null;
+                }
+            } catch(e) {
+                hideLoading();
+                showToast("Network error while saving draft: " + e.message, "error");
+                return null;
+            }
+        }
+
+        async function handlePreviewWithDeferredSync() {
+            const draft = await saveDraftToServer();
+            if (!draft) return;
+
+            document.getElementById('pvTitle').innerText = document.getElementById('postTitle').value.trim();
+            document.getElementById('pvBody').innerHTML = cleanEditorContentForExport();
+
+            const coverPreviewSrc = activeFeaturedHash 
+                ? `/img_asset/${activeFeaturedHash}` 
+                : (pendingFeaturedDataUrl || null);
+
+            if (coverPreviewSrc) {
+                document.getElementById('pvCoverImg').src = coverPreviewSrc;
+                document.getElementById('pvCoverWrap').classList.remove('hidden');
+            } else {
+                document.getElementById('pvCoverWrap').classList.add('hidden');
+            }
+
+            const previewUrl = `${window.location.origin}/preview/${draft.wp_slug}`;
+            document.getElementById('previewLinkInput').value = previewUrl;
+            document.getElementById('previewOpenNewTabBtn').href = previewUrl;
+
+            document.getElementById('previewModal').classList.remove('hidden');
+            showToast("Preview ready! Publish Post button is now unlocked.", "info");
+        }
+
+        function copyPreviewLink() {
+            const input = document.getElementById('previewLinkInput');
+            input.select();
+            document.execCommand('copy');
+            showToast("Preview Link copied to clipboard!", "info");
+        }
+
+        function closePreviewModal() {
+            document.getElementById('previewModal').classList.add('hidden');
+        }
+
+        function proceedToVerifyFromPreview() {
+            closePreviewModal();
+            openTotpModal();
+        }
+
+        async function handlePublishFlowWithDeferredSync() {
+            if (!hasPreviewedCurrentState) {
+                showToast("Opening Preview first to verify your article...", "info");
+                await handlePreviewWithDeferredSync();
+                return;
+            }
+            const draft = await saveDraftToServer();
+            if (draft) {
+                openTotpModal();
+            }
+        }
+
+        // --- GOOGLE AUTHENTICATOR (TOTP) 2FA FLOW WITH COMPLETE TASK DELETION ---
+        function openTotpModal() {
+            document.getElementById('totpErrorMsg').classList.add('hidden');
+            document.getElementById('totpInput').value = "";
+            document.getElementById('totpModal').classList.remove('hidden');
+            setTimeout(() => document.getElementById('totpInput').focus(), 100);
+        }
+
+        function closeTotpModal() {
+            document.getElementById('totpModal').classList.add('hidden');
+        }
+
+        async function submitFinalVerification() {
+            const code = document.getElementById('totpInput').value.trim();
+            const err = document.getElementById('totpErrorMsg');
+            err.classList.add('hidden');
+
+            if (!code || code.length !== 6) {
+                err.innerText = "Please provide the complete 6-digit TOTP code.";
+                err.classList.remove('hidden');
+                return;
+            }
+
+            if (!generatedSlugCache) {
+                showToast("Session slug expired. Please click Preview & Sync first.", "warn");
+                closeTotpModal();
+                return;
+            }
+
+            const btn = document.getElementById('finalPublishBtn');
+            btn.disabled = true;
+            btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Verifying...`;
+
+            try {
+                const res = await fetch("/admin/verify-post", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        username: activeAdmin.username,
+                        password: activeAdmin.password,
+                        wp_slug: generatedSlugCache,
+                        totp_code: code
+                    })
+                });
+                const data = await res.json();
+
+                if (res.ok && data.status === "success") {
+                    // Lock auto-save so it NEVER re-saves the published task!
+                    isPublishingCompleted = true;
+                    clearTimeout(autoSaveTimer);
+
+                    const publishedSlug = generatedSlugCache;
+                    const taskIdToPurge = currentTaskId;
+
+                    // Permanently remove published task from localStorage and IndexedDB Vault
+                    const nextTask = await purgeTaskFromStorageAndVault(taskIdToPurge);
+                    await loadTaskIntoWorkspace(nextTask);
+                    closeTotpModal();
+
+                    showToast("🎉 Article published! Draft removed from workspace.", "info");
+                    setTimeout(() => {
+                        window.location.href = `/${publishedSlug}`;
+                    }, 900);
+                } else {
+                    err.innerText = data.detail || "Authentication Failed. Invalid or expired code.";
+                    err.classList.remove('hidden');
+                }
+            } catch(e) {
+                err.innerText = "Verification network error: " + e.message;
+                err.classList.remove('hidden');
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = `<span>Verify & Post</span> <i class="fas fa-arrow-right"></i>`;
+            }
+        }
+
+        function execCmd(command, value = null) {
+            document.getElementById('editorContent').focus();
+            document.execCommand(command, false, value);
+            inspectCurrentCursorBlock();
+            updateStats();
+            triggerAutoSaveLocal();
+        }
+
+        // Convert only the active block/line to H1/H2/H3 or toggle back to Normal Paragraph (P)
+        function formatHeading(tag) {
+            const ed = document.getElementById('editorContent');
+            ed.focus();
+
+            const sel = window.getSelection();
+            if (!sel || sel.rangeCount === 0) return;
+
+            const currentBlock = findClosestBlockInEditor(sel.anchorNode);
+            const currentTag = currentBlock && currentBlock.tagName ? currentBlock.tagName.toUpperCase() : 'P';
+
+            // If user clicked the SAME heading tag again (e.g. clicking H2 when already H2), toggle it off to Normal Body <p>!
+            if (tag === 'P' || currentTag === tag) {
+                resetCurrentBlockToParagraph();
+                return;
+            }
+
+            // If current block has <br> line breaks inside it, split them into clean <p> blocks first so formatBlock doesn't make the whole article a heading!
+            if (currentBlock && currentBlock.innerHTML.includes('<br')) {
+                const htmlParts = currentBlock.innerHTML.split(/<br\s*\/?>/i);
+                if (htmlParts.length > 1) {
+                    const selectedStr = sel.toString().trim();
+                    const frag = document.createDocumentFragment();
+                    let targetNodeToFocus = null;
+
+                    htmlParts.forEach(part => {
+                        const cleanPart = part.trim();
+                        if (!cleanPart) return;
+                        const tempDiv = document.createElement('div');
+                        tempDiv.innerHTML = cleanPart;
+                        const isTarget = selectedStr && tempDiv.innerText.includes(selectedStr);
+                        const el = document.createElement(isTarget ? tag.toLowerCase() : 'p');
+                        el.innerHTML = cleanPart;
+                        if (isTarget) targetNodeToFocus = el;
+                        frag.appendChild(el);
+                    });
+
+                    currentBlock.replaceWith(frag);
+                    if (targetNodeToFocus) {
+                        const r = document.createRange();
+                        r.selectNodeContents(targetNodeToFocus);
+                        sel.removeAllRanges();
+                        sel.addRange(r);
+                    }
+                    inspectCurrentCursorBlock();
+                    updateStats();
+                    triggerAutoSaveLocal();
+                    return;
+                }
+            }
+
+            document.execCommand('formatBlock', false, `<${tag}>`);
+            inspectCurrentCursorBlock();
+            updateStats();
+            triggerAutoSaveLocal();
+        }
+
+        // 1-Click Reliable Reset from H1/H2/H3/Quote back to Normal Body Paragraph (<p>)
+        function resetCurrentBlockToParagraph() {
+            const ed = document.getElementById('editorContent');
+            ed.focus();
+            const sel = window.getSelection();
+            if (!sel || sel.rangeCount === 0) return;
+
+            const blockEl = findClosestBlockInEditor(sel.anchorNode);
+            if (blockEl && blockEl !== ed && ['H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'BLOCKQUOTE', 'PRE'].includes(blockEl.tagName?.toUpperCase())) {
+                const p = document.createElement('p');
+                p.innerHTML = blockEl.innerHTML || '<br>';
+                blockEl.replaceWith(p);
+
+                const r = document.createRange();
+                r.selectNodeContents(p);
+                r.collapse(false);
+                sel.removeAllRanges();
+                sel.addRange(r);
+            } else {
+                document.execCommand('formatBlock', false, '<p>');
+                document.execCommand('removeFormat', false, null);
+            }
+
+            inspectCurrentCursorBlock();
+            updateStats();
+            triggerAutoSaveLocal();
+            showToast("Converted to Normal Body Text (P)", "info");
+        }
+
+        // 1-Click Fix for any accidentally oversized pasted article text
+        function cleanAndNormalizeEntireArticle() {
+            const ed = document.getElementById('editorContent');
+            const sel = window.getSelection();
+
+            // If user has highlighted specific text, reset that selection to normal paragraph
+            if (sel && sel.toString().trim().length > 0) {
+                document.execCommand('removeFormat', false, null);
+                resetCurrentBlockToParagraph();
+                return;
+            }
+
+            // Otherwise sanitize and normalize all paragraphs in the editor while keeping images & widgets safe
+            ed.querySelectorAll('span, font').forEach(el => {
+                if (!el.closest('.img-toolbar') && !el.closest('.editor-block-toolbar')) {
+                    el.removeAttribute('style');
+                }
+            });
+            ed.querySelectorAll('p, div, li').forEach(el => {
+                if (!el.classList.contains('callout-box') && !el.classList.contains('article-img-wrap') && !el.classList.contains('img-toolbar') && !el.classList.contains('editor-block-toolbar')) {
+                    el.removeAttribute('style');
+                }
+            });
+            showToast("Article formatting & font sizes normalized!", "info");
+            triggerAutoSaveLocal();
+        }
+
+        function toggleHighlight() {
+            const selection = window.getSelection();
+            if (!selection.rangeCount) return;
+            execCmd('hiliteColor', '#fef08a');
+        }
+
+        function createBlockToolbarHTML(type) {
+            if (type === 'code') {
+                return `
+                    <div class="editor-block-toolbar" contenteditable="false">
+                        <span class="text-[10px] font-mono text-emerald-400 font-bold flex items-center gap-1.5">
+                            <i class="fas fa-code"></i> CODE SNIPPET
+                        </span>
+                        <div class="flex items-center gap-1">
+                            <span class="block-tool-btn" onclick="copyCodeBlock(this)"><i class="fas fa-copy"></i> Copy</span>
+                            <span class="block-tool-btn" onclick="insertParagraphAroundBlock(this.closest('.code-snippet-wrap'), 'after')"><i class="fas fa-level-down-alt"></i> +Line Below</span>
+                            <span class="block-tool-btn danger" onclick="removeSpecialBlock(this.closest('.code-snippet-wrap'))"><i class="fas fa-trash-can"></i> Remove Code</span>
+                        </div>
+                    </div>
+                `;
+            }
+            return `
+                <div class="editor-block-toolbar" contenteditable="false">
+                    <span class="block-tool-btn" onclick="insertParagraphAroundBlock(this.parentElement.parentElement, 'after')"><i class="fas fa-level-down-alt"></i> +Line</span>
+                    <span class="block-tool-btn danger" onclick="removeSpecialBlock(this.parentElement.parentElement)"><i class="fas fa-trash-can"></i> Remove</span>
+                </div>
+            `;
+        }
+
+        function insertCodeSnippet() {
+            const pre = document.createElement('pre');
+            pre.className = "code-snippet-wrap";
+            pre.innerHTML = `${createBlockToolbarHTML('code')}<code contenteditable="true">// Enter your clean code snippet here\nfunction calculateMetrics() {\n    return true;\n}</code>`;
+            insertNodeAtSelection(pre);
+            showToast("Code snippet added! Click 'Remove Code' anytime to delete.", "info");
+        }
+
+        function copyCodeBlock(btn) {
+            const codeEl = btn.closest('.code-snippet-wrap')?.querySelector('code');
+            if (codeEl) {
+                const tempInput = document.createElement('textarea');
+                tempInput.value = codeEl.innerText;
+                document.body.appendChild(tempInput);
+                tempInput.select();
+                document.execCommand('copy');
+                tempInput.remove();
+                showToast("Code copied to clipboard!", "info");
+            }
+        }
+
+        function insertBlockquote() {
+            const selection = window.getSelection();
+            const blockquote = document.createElement('blockquote');
+            const text = (selection && selection.toString().trim()) ? selection.toString() : 'Highlighted insightful quote or key takeaway...';
+            blockquote.innerHTML = `${createBlockToolbarHTML('quote')}<div contenteditable="true">${text}</div>`;
+            insertNodeAtSelection(blockquote);
+        }
+
+        function toggleCalloutMenu() {
+            document.getElementById('calloutMenu').classList.toggle('hidden');
+        }
+
+        function insertCallout(type) {
+            document.getElementById('calloutMenu').classList.add('hidden');
+            const wrap = document.createElement('div');
+            wrap.className = `callout-box callout-${type}`;
+            
+            let icon = 'fa-lightbulb';
+            let title = 'Pro Tip:';
+            if (type === 'info') { icon = 'fa-info-circle'; title = 'Important Note:'; }
+            if (type === 'warning') { icon = 'fa-triangle-exclamation'; title = 'Warning:'; }
+
+            wrap.innerHTML = `
+                ${createBlockToolbarHTML('callout')}
+                <i class="fas ${icon} mt-1 text-base" contenteditable="false"></i>
+                <div class="flex-1" contenteditable="true">
+                    <b>${title}</b> Enter your highlighted details here.
+                </div>
+            `;
+
+            insertNodeAtSelection(wrap);
+        }
+
+        function insertCleanTable() {
+            const wrapper = document.createElement('div');
+            wrapper.className = "table-wrapper-block relative my-6";
+            wrapper.innerHTML = `
+                ${createBlockToolbarHTML('table')}
+                <table class="border-collapse">
+                    <thead>
+                        <tr>
+                            <th>Parameter / Feature</th>
+                            <th>Description</th>
+                            <th>Status / Rating</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Performance Factor</td>
+                            <td>Optimized background streaming</td>
+                            <td>Excellent</td>
+                        </tr>
+                        <tr>
+                            <td>Reliability Factor</td>
+                            <td>Local persistent caching</td>
+                            <td>100% Protected</td>
+                        </tr>
+                    </tbody>
+                </table>
+            `;
+            insertNodeAtSelection(wrapper);
+        }
+
+        function removeSpecialBlock(blockEl) {
+            if (!blockEl) return;
+            const p = document.createElement('p');
+            p.innerHTML = '<br>';
+            blockEl.replaceWith(p);
+
+            const sel = window.getSelection();
+            const r = document.createRange();
+            r.setStart(p, 0);
+            r.collapse(true);
+            sel.removeAllRanges();
+            sel.addRange(r);
+
+            updateStats();
+            triggerAutoSaveLocal();
+            showToast("Block removed cleanly", "info");
+        }
+
+        function insertParagraphAroundBlock(blockEl, pos = 'after') {
+            if (!blockEl) return;
+            const p = document.createElement('p');
+            p.innerHTML = '<br>';
+            if (pos === 'before') blockEl.before(p);
+            else blockEl.after(p);
+
+            const sel = window.getSelection();
+            const r = document.createRange();
+            r.setStart(p, 0);
+            r.collapse(true);
+            sel.removeAllRanges();
+            sel.addRange(r);
+            triggerAutoSaveLocal();
+        }
+
+        function rehydrateInteractiveBlocksInEditor() {
+            const ed = document.getElementById('editorContent');
+            if (!ed) return;
+
+            ed.querySelectorAll('.code-snippet-wrap').forEach(pre => {
+                if (!pre.querySelector('.editor-block-toolbar')) {
+                    pre.insertAdjacentHTML('afterbegin', createBlockToolbarHTML('code'));
+                }
+                const code = pre.querySelector('code');
+                if (code) code.setAttribute('contenteditable', 'true');
+            });
+
+            ed.querySelectorAll('.callout-box').forEach(box => {
+                if (!box.querySelector('.editor-block-toolbar')) {
+                    box.insertAdjacentHTML('afterbegin', createBlockToolbarHTML('callout'));
+                }
+            });
+
+            ed.querySelectorAll('blockquote').forEach(bq => {
+                if (!bq.querySelector('.editor-block-toolbar')) {
+                    bq.insertAdjacentHTML('afterbegin', createBlockToolbarHTML('quote'));
+                }
+            });
+
+            ed.querySelectorAll('.article-img-wrap').forEach(wrap => {
+                if (!wrap.querySelector('.img-toolbar')) {
+                    wrap.insertAdjacentHTML('beforeend', `
+                        <div class="img-toolbar" contenteditable="false">
+                            <span class="img-tool-btn" title="Edit Alt Tag" onclick="editImgAlt(this)"><i class="fas fa-font"></i> Alt</span>
+                            <span class="img-tool-btn" title="Align Left" onclick="alignImg(this, 'left')"><i class="fas fa-align-left"></i></span>
+                            <span class="img-tool-btn" title="Center" onclick="alignImg(this, 'center')"><i class="fas fa-align-center"></i></span>
+                            <span class="img-tool-btn text-red-300 hover:text-red-400" title="Delete Image" onclick="deleteImgWrapper(this)"><i class="fas fa-trash"></i></span>
+                        </div>
+                    `);
+                }
+            });
+        }
+
+        function insertNodeAtSelection(node) {
+            const ed = document.getElementById('editorContent');
+            ed.focus();
+            const selection = window.getSelection();
+            if (selection.rangeCount > 0 && ed.contains(selection.anchorNode)) {
+                const range = selection.getRangeAt(0);
+                range.collapse(false);
+                range.insertNode(node);
+
+                const p = document.createElement('p');
+                p.innerHTML = '<br>';
+                node.after(p);
+
+                const newRange = document.createRange();
+                newRange.setStart(p, 0);
+                newRange.collapse(true);
+                selection.removeAllRanges();
+                selection.addRange(newRange);
+            } else {
+                ed.appendChild(node);
+                const p = document.createElement('p');
+                p.innerHTML = '<br>';
+                ed.appendChild(p);
+            }
+            updateStats();
+            triggerAutoSaveLocal();
+        }
+
+        async function promptInsertLink() {
+            const url = await openCustomDialog({
+                title: "Insert Hyperlink",
+                message: "Enter full destination URL (e.g. https://pranavblog.online/...):",
+                showInput: true,
+                defaultValue: "https://",
+                confirmText: "Insert Link"
+            });
+            if (url && url.trim() && url.trim() !== "https://") {
+                execCmd('createLink', url.trim());
+            }
+        }
+
+        function toggleRawHtmlMode() {
+            const visual = document.getElementById('editorContent');
+            const raw = document.getElementById('rawHtmlEditor');
+            const btn = document.getElementById('htmlToggleBtn');
+
+            if (!isRawHtmlMode) {
+                raw.value = cleanEditorContentForExport();
+                visual.classList.add('hidden');
+                raw.classList.remove('hidden');
+                btn.classList.add('bg-purple-200', 'text-purple-950');
+                isRawHtmlMode = true;
+                showToast("Switched to Raw HTML Editor mode", "info");
+            } else {
+                visual.innerHTML = raw.value;
+                rehydrateInteractiveBlocksInEditor();
+                raw.classList.add('hidden');
+                visual.classList.remove('hidden');
+                btn.classList.remove('bg-purple-200', 'text-purple-950');
+                isRawHtmlMode = false;
+                showToast("Switched to Visual Canvas mode", "info");
+                updateStats();
+            }
+            triggerAutoSaveLocal();
+        }
+
+        function toggleZenFullscreen() {
+            const card = document.getElementById('editorCanvasCard');
+            card.classList.toggle('zen-active');
+            if (card.classList.contains('zen-active')) {
+                showToast("Zen Mode ON. Press Esc or click again to exit.", "info");
+            }
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === "Escape") {
+                const card = document.getElementById('editorCanvasCard');
+                if (card.classList.contains('zen-active')) {
+                    card.classList.remove('zen-active');
+                }
+                closeSelectionBubble();
+            }
+        });
+
+        function updateStats() {
+            const clone = document.getElementById('editorContent').cloneNode(true);
+            clone.querySelectorAll('.img-toolbar, .editor-block-toolbar').forEach(el => el.remove());
+            const text = clone.innerText.trim();
+            const words = text ? text.split(/\s+/).filter(Boolean).length : 0;
+            const chars = text ? text.length : 0;
+            const readTime = Math.ceil(words / 200);
+            const imgs = document.getElementById('editorContent').querySelectorAll('img').length;
+
+            document.getElementById('statWords').innerText = words;
+            document.getElementById('statChars').innerText = chars;
+            document.getElementById('statReadTime').innerText = readTime;
+            document.getElementById('statImages').innerText = imgs;
+        }
+
+        function toggleSerpPreview() {
+            const box = document.getElementById('serpPreviewBox');
+            const label = document.getElementById('serpToggleLabel');
+            if (box.classList.contains('hidden')) {
+                box.classList.remove('hidden');
+                label.innerText = "Hide Google SERP Snippet Preview";
+                updateSerpSnippet();
+            } else {
+                box.classList.add('hidden');
+                label.innerText = "Show Google SERP Snippet Preview";
+            }
+        }
+
+        function updateSerpSnippet() {
+            const title = document.getElementById('postTitle').value.trim() || "Article Headline";
+            const customSlug = document.getElementById('customSlug').value.trim();
+            const autoSlug = title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
+            const activeSlug = customSlug || (autoSlug && autoSlug !== 'article-headline' ? autoSlug : "article-slug");
+            
+            const firstPara = document.querySelector('#editorContent p')?.innerText.trim() || "Article description will automatically form from your opening paragraph content.";
+
+            document.getElementById('serpTitleText').innerText = title;
+            document.getElementById('serpSlugText').innerText = activeSlug;
+            document.getElementById('serpDescText').innerText = firstPara;
+        }
+
+        function showLoading(title, subtitle) {
+            document.getElementById('loadingTitle').innerText = title;
+            document.getElementById('loadingSubtitle').innerText = subtitle;
+            document.getElementById('loadingProgressBar').style.width = '0%';
+            document.getElementById('loadingOverlay').classList.remove('hidden');
+        }
+
+        function hideLoading() {
+            document.getElementById('loadingOverlay').classList.add('hidden');
+        }
+    </script>
+</body>
+</html>
