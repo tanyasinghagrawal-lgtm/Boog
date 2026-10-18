@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Workspace | Pranav Blog</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts (Apple Style) -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: #f8fafc;
+            margin: 0;
+            min-height: 100vh;
+            overflow-x: hidden;
+            color: #0f172a;
+        }
+
+        /* --- MODERN ANIMATED MESH BACKGROUND --- */
+        .liquid-bg {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            z-index: -1;
+            background: radial-gradient(at 0% 0%, rgba(224, 231, 255, 0.7) 0px, transparent 50%),
+                        radial-gradient(at 100% 0%, rgba(252, 231, 243, 0.7) 0px, transparent 50%),
+                        radial-gradient(at 100% 100%, rgba(209, 250, 229, 0.6) 0px, transparent 50%),
+                        radial-gradient(at 0% 100%, rgba(224, 242, 254, 0.7) 0px, transparent 50%);
+            background-color: #f1f5f9;
+            overflow: hidden;
+        }
+
+        .blob {
+            position: absolute;
+            filter: blur(80px);
+            opacity: 0.55;
+            animation: float 18s infinite alternate ease-in-out;
+            border-radius: 50%;
+        }
+
+        .blob-1 { width: 450px; height: 450px; background: #c084fc; top: -120px; left: -100px; }
+        .blob-2 { width: 550px; height: 550px; background: #60a5fa; bottom: -180px; right: -100px; animation-delay: -5s; }
+        .blob-3 { width: 400px; height: 400px; background: #34d399; top: 35%; left: 42%; animation-delay: -10s; }
+
+        @keyframes float {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(120px, 80px) scale(1.15); }
+        }
+
+        /* --- ULTRA MODERN GLASSMORPHISM UI --- */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.72);
+            backdrop-filter: blur(28px);
+            -webkit-backdrop-filter: blur(28px);
+            border: 1px solid rgba(255, 255, 255, 0.85);
+            box-shadow: 0 20px 50px rgba(15, 23, 42, 0.06), 0 1px 3px rgba(15, 23, 42, 0.03);
+            border-radius: 24px;
+        }
+        
+        .glass-card {
+            background: rgba(255, 255, 255, 0.65);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.9);
+            border-radius: 18px;
+            box-shadow: 0 4px 20px rgba(15, 23, 42, 0.03);
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .glass-card:hover {
+            transform: translateY(-2px);
+            background: rgba(255, 255, 255, 0.88);
+            box-shadow: 0 12px 30px rgba(15, 23, 42, 0.07);
+            border-color: #ffffff;
+        }
+
+        .glass-input {
+            background: rgba(255, 255, 255, 0.75);
+            border: 1px solid rgba(203, 213, 225, 0.7);
+            border-radius: 14px;
+            padding: 12px 16px;
+            width: 100%;
+            outline: none;
+            transition: all 0.25s ease;
+            color: #0f172a;
+        }
+        .glass-input:focus {
+            background: #ffffff;
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15);
+            border-color: #3b82f6;
+        }
+
+        /* --- MODERN BUTTONS --- */
+        .btn-apple {
+            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+            color: white;
+            border-radius: 980px;
+            padding: 10px 22px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            box-shadow: 0 4px 14px rgba(37, 99, 235, 0.25);
+        }
+        .btn-apple:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(37, 99, 235, 0.35); }
+        .btn-apple:active { transform: scale(0.98); }
+
+        .btn-action {
+            width: 38px;
+            height: 38px;
+            border-radius: 12px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            font-size: 0.9rem;
+        }
+
+        .btn-copy-html {
+            background: rgba(16, 185, 129, 0.12);
+            color: #059669;
+            border: 1px solid rgba(16, 185, 129, 0.25);
+        }
+        .btn-copy-html:hover {
+            background: #10b981;
+            color: white;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+            transform: translateY(-1px);
+        }
+
+        .btn-edit {
+            background: rgba(59, 130, 246, 0.1);
+            color: #2563eb;
+            border: 1px solid rgba(59, 130, 246, 0.2);
+        }
+        .btn-edit:hover {
+            background: #2563eb;
+            color: white;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+            transform: translateY(-1px);
+        }
+
+        .btn-danger {
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+            border: 1px solid rgba(239, 68, 68, 0.2);
+        }
+        .btn-danger:hover {
+            background: #ef4444;
+            color: white;
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+            transform: translateY(-1px);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            box-shadow: 0 4px 14px rgba(16, 185, 129, 0.3);
+        }
+        .btn-success:hover { box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4); }
+
+        /* --- APPLE TOGGLE SWITCH --- */
+        .apple-switch {
+            position: relative; width: 50px; height: 28px; display: inline-block;
+        }
+        .apple-switch input { opacity: 0; width: 0; height: 0; }
+        .slider {
+            position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0;
+            background-color: #cbd5e1; transition: .35s; border-radius: 30px;
+        }
+        .slider:before {
+            position: absolute; content: ""; height: 22px; width: 22px;
+            left: 3px; bottom: 3px; background-color: white; transition: .35s;
+            border-radius: 50%; box-shadow: 0 2px 4px rgba(0,0,0,0.18);
+        }
+        input:checked + .slider { background-color: #10b981; }
+        input:checked + .slider:before { transform: translateX(22px); }
+
+        /* Loader */
+        .spinner {
+            border: 2.5px solid rgba(255,255,255,0.3); border-radius: 50%;
+            border-top: 2.5px solid currentColor; width: 18px; height: 18px;
+            animation: spin 0.8s linear infinite; display: inline-block;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(100, 116, 139, 0.25); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(100, 116, 139, 0.4); }
+    </style>
+</head>
+<body>
+
+    <!-- Liquid Animated Background -->
+    <div class="liquid-bg">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
+    </div>
+
+    <!-- ==================== LOGIN SCREEN ==================== -->
+    <div id="login-screen" class="min-h-screen flex items-center justify-center p-4">
+        <div class="glass-panel p-10 w-full max-w-md text-center transform transition-all">
+            <div class="w-16 h-16 bg-gradient-to-tr from-blue-600 to-indigo-600 rounded-2xl mx-auto flex items-center justify-center mb-6 shadow-xl shadow-blue-500/20">
+                <i class="fas fa-shield-halved text-white text-2xl"></i>
+            </div>
+            <h2 class="text-3xl font-bold mb-2 tracking-tight text-slate-900">Admin Workspace</h2>
+            <p class="text-slate-500 mb-8 text-sm">Sign in securely to manage, export & publish articles.</p>
+            
+            <form id="login-form" class="space-y-5 text-left">
+                <div>
+                    <label class="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-1.5 ml-1">Admin ID</label>
+                    <input type="text" id="admin-id" required class="glass-input" placeholder="Enter username">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-1.5 ml-1">Password</label>
+                    <input type="password" id="admin-pass" required class="glass-input" placeholder="••••••••">
+                </div>
+                <button type="submit" id="login-btn" class="btn-apple w-full mt-6 py-3.5 text-base">
+                    <span>Authenticate</span> <i class="fas fa-arrow-right text-xs"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- ==================== DASHBOARD SCREEN ==================== -->
+    <div id="dashboard-screen" class="hidden min-h-screen flex flex-col p-4 md:p-8 max-w-7xl mx-auto">
+        
+        <!-- Header -->
+        <header class="glass-panel px-6 py-4 mb-8 flex flex-wrap justify-between items-center gap-4">
+            <div class="flex items-center gap-4">
+                <div class="w-11 h-11 bg-gradient-to-br from-slate-900 to-slate-700 rounded-2xl flex items-center justify-center shadow-md">
+                    <i class="fas fa-pen-nib text-white text-lg"></i>
+                </div>
+                <div>
+                    <h1 class="text-xl md:text-2xl font-bold tracking-tight text-slate-900">Content Studio</h1>
+                    <p class="text-xs text-slate-500 font-medium">Manage SEO, WordPress Sync & HTML Exports</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-3">
+                <a href="/editor" target="_blank" class="btn-apple !bg-slate-800 !from-slate-800 !to-slate-900 hover:!bg-black shadow-none text-xs md:text-sm py-2.5 px-4">
+                    <i class="fas fa-feather-pointed"></i> Open Editor
+                </a>
+                <button onclick="logout()" class="btn-apple !bg-white/80 !from-transparent !to-transparent !text-slate-700 hover:!bg-white border border-slate-200/80 shadow-sm text-xs md:text-sm py-2.5 px-4">
+                    <i class="fas fa-sign-out-alt text-red-500"></i> Logout
+                </button>
+            </div>
+        </header>
+
+        <!-- Main Content Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+            
+            <!-- LEFT COL: ADD POST & VERIFY -->
+            <div class="lg:col-span-4 space-y-6">
+                <div class="glass-panel p-6">
+                    <h3 class="text-base font-bold text-slate-800 mb-4 flex items-center gap-2.5">
+                        <span class="w-8 h-8 rounded-lg bg-blue-100 text-blue-600 flex items-center justify-center"><i class="fas fa-plus"></i></span>
+                        Publish New Entry
+                    </h3>
+                    
+                    <form id="add-post-form" class="space-y-4">
+                        <div>
+                            <label class="block text-xs font-semibold uppercase tracking-wider text-slate-500 mb-1.5 ml-1">WordPress URL</label>
+                            <input type="url" id="wp-url" required class="glass-input text-sm" placeholder="https://domain.com/post-name/">
+                        </div>
+                        
+                        <div class="flex items-center justify-between bg-white/60 p-4 rounded-2xl border border-slate-200/60">
+                            <div>
+                                <p class="font-semibold text-sm text-slate-800">Post as Old Date?</p>
+                                <p class="text-xs text-slate-500">Fetch original publish timestamp</p>
+                            </div>
+                            <label class="apple-switch">
+                                <input type="checkbox" id="is-old-post">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+
+                        <button type="submit" id="add-btn" class="btn-apple w-full py-3">
+                            <i class="fas fa-cloud-download-alt"></i> Fetch & Generate Preview
+                        </button>
+                    </form>
+                </div>
+
+                <!-- VERIFY MODAL (Appears after fetching) -->
+                <div id="verify-box" class="glass-panel p-6 hidden border-blue-400/80 border-2 transform transition-all">
+                    <div class="text-center mb-4">
+                        <div class="w-12 h-12 bg-emerald-100 text-emerald-600 rounded-2xl flex items-center justify-center mx-auto mb-2 shadow-sm">
+                            <i class="fas fa-eye text-xl"></i>
+                        </div>
+                        <h4 class="font-bold text-lg text-slate-800">Preview Ready!</h4>
+                        <p class="text-xs text-slate-500">Review the article layout before publishing live.</p>
+                    </div>
+                    
+                    <a id="preview-link" href="#" target="_blank" class="btn-apple !bg-slate-800 !from-slate-800 !to-slate-900 w-full mb-4 shadow-md justify-center py-2.5">
+                        Open Preview Tab <i class="fas fa-external-link-alt ml-1 text-xs"></i>
+                    </a>
+
+                    <div class="mb-4 text-left">
+                        <label class="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-1.5 ml-1">
+                            <i class="fas fa-key text-amber-500 mr-1"></i> Authenticator Code (6-Digit)
+                        </label>
+                        <input type="text" id="totp-code" maxlength="6" class="glass-input text-center font-mono text-lg tracking-widest font-bold" placeholder="000000">
+                    </div>
+                    
+                    <button onclick="verifyPost()" id="verify-btn" class="btn-apple btn-success w-full justify-center text-base py-3 shadow-lg">
+                        <i class="fas fa-check-circle"></i> Verify & Process AI
+                    </button>
+                    <p class="text-[11px] text-center text-slate-400 mt-3">Triggers AI Summary, Vector Embeddings & Push Notification.</p>
+                </div>
+            </div>
+
+            <!-- RIGHT COL: MANAGE POSTS -->
+            <div class="lg:col-span-8 glass-panel p-6 min-h-[640px] flex flex-col">
+                <div class="flex flex-wrap justify-between items-center gap-4 mb-5">
+                    <div class="flex items-center gap-3">
+                        <span class="w-9 h-9 rounded-xl bg-purple-100 text-purple-600 flex items-center justify-center font-bold">
+                            <i class="fas fa-layer-group"></i>
+                        </span>
+                        <div>
+                            <h3 class="text-lg font-bold text-slate-800 leading-tight">Manage Articles</h3>
+                            <p class="text-xs text-slate-500">Search, Copy/Download HTML for WordPress, Edit SEO or Delete</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span id="article-count-badge" class="text-xs font-semibold bg-slate-200/80 text-slate-700 px-3 py-1.5 rounded-full">0 Articles</span>
+                        <button onclick="loadBlogs()" title="Refresh List" class="text-slate-600 hover:text-blue-600 transition-colors bg-white/80 hover:bg-white border border-slate-200/70 p-2 rounded-xl w-9 h-9 flex items-center justify-center shadow-sm">
+                            <i class="fas fa-sync-alt"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Search Bar -->
+                <div class="relative mb-5">
+                    <i class="fas fa-search absolute left-4 top-3.5 text-slate-400"></i>
+                    <input type="text" id="search-blog" onkeyup="filterBlogs()" class="glass-input pl-11 pr-10 text-sm" placeholder="Search articles by title or slug...">
+                    <button id="clear-search-btn" onclick="clearSearch()" class="hidden absolute right-3.5 top-3 text-slate-400 hover:text-slate-600">
+                        <i class="fas fa-times-circle"></i>
+                    </button>
+                </div>
+
+                <!-- Legend / Quick Tip -->
+                <div class="flex flex-wrap items-center justify-between gap-2 px-3 py-2 mb-4 rounded-xl bg-emerald-50/80 border border-emerald-200/60 text-xs text-emerald-800">
+                    <span class="flex items-center gap-2 font-medium">
+                        <i class="fas fa-magic text-emerald-600"></i>
+                        <strong>Copy & Download HTML:</strong> Copies rich formatted article (with full images) to clipboard & downloads <code>.html</code> file simultaneously!
+                    </span>
+                </div>
+
+                <!-- Blog List Container -->
+                <div id="blog-list" class="space-y-3.5 overflow-y-auto pr-1.5 flex-grow max-h-[560px]">
+                    <!-- Loading state -->
+                    <div class="text-center text-slate-500 py-14">
+                        <div class="spinner border-slate-300 border-t-slate-800 mb-3"></div>
+                        <p class="text-sm font-medium">Loading your articles...</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- NOTIFICATION TOAST -->
+    <div id="toast" class="fixed bottom-6 right-6 glass-panel px-5 py-3.5 flex items-center gap-3 transform translate-y-24 opacity-0 transition-all duration-300 z-50 max-w-md">
+        <i id="toast-icon" class="fas fa-info-circle text-blue-500 text-xl"></i>
+        <span id="toast-msg" class="font-semibold text-sm text-slate-800">Action completed!</span>
+    </div>
+
+    <!-- APP LOGIC -->
+    <script>
+        const API_BASE = ""; 
+        
+        let currentTempSlug = "";
+        let allBlogsData = [];
+
+        // Elements
+        const loginScreen = document.getElementById('login-screen');
+        const dashboardScreen = document.getElementById('dashboard-screen');
+        const verifyBox = document.getElementById('verify-box');
+        const blogListEl = document.getElementById('blog-list');
+        const countBadge = document.getElementById('article-count-badge');
+
+        // Check Auth on Load
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedId = localStorage.getItem("adminId");
+            const savedPass = localStorage.getItem("adminPass");
+            if (savedId && savedPass) {
+                showDashboard();
+            }
+        });
+
+        // ================= AUTHENTICATION =================
+        document.getElementById('login-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const id = document.getElementById('admin-id').value;
+            const pass = document.getElementById('admin-pass').value;
+            const btn = document.getElementById('login-btn');
+            
+            btn.innerHTML = '<div class="spinner"></div>';
+            
+            try {
+                const res = await fetch(`${API_BASE}/admin/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username: id, password: pass })
+                });
+
+                if (res.ok) {
+                    localStorage.setItem("adminId", id);
+                    localStorage.setItem("adminPass", pass);
+                    showToast("Login successful!", "success");
+                    showDashboard();
+                } else {
+                    showToast("Invalid credentials!", "error");
+                }
+            } catch (err) {
+                showToast("Network error. Server might be down.", "error");
+            } finally {
+                btn.innerHTML = '<span>Authenticate</span> <i class="fas fa-arrow-right text-xs"></i>';
+            }
+        });
+
+        function logout() {
+            localStorage.removeItem("adminId");
+            localStorage.removeItem("adminPass");
+            dashboardScreen.classList.add('hidden');
+            loginScreen.classList.remove('hidden');
+            showToast("Logged out successfully.", "info");
+        }
+
+        function showDashboard() {
+            loginScreen.classList.add('hidden');
+            dashboardScreen.classList.remove('hidden');
+            loadBlogs();
+        }
+
+        // ================= ADD & VERIFY POST =================
+        document.getElementById('add-post-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const url = document.getElementById('wp-url').value;
+            const isOld = document.getElementById('is-old-post').checked;
+            const btn = document.getElementById('add-btn');
+            
+            btn.innerHTML = '<div class="spinner"></div> Fetching...';
+            btn.disabled = true;
+
+            const creds = getCreds();
+            
+            try {
+                const res = await fetch(`${API_BASE}/admin/add-post`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ ...creds, url: url, is_old_post: isOld })
+                });
+                
+                const data = await res.json();
+                
+                if (res.ok) {
+                    showToast("Draft fetched! Check preview.", "success");
+                    currentTempSlug = data.wp_slug;
+                    document.getElementById('preview-link').href = data.preview_url;
+                    
+                    verifyBox.classList.remove('hidden');
+                    document.getElementById('wp-url').value = '';
+                } else {
+                    showToast(data.detail || "Error fetching URL", "error");
+                }
+            } catch (err) {
+                showToast("Network Error", "error");
+            } finally {
+                btn.innerHTML = '<i class="fas fa-cloud-download-alt"></i> Fetch & Generate Preview';
+                btn.disabled = false;
+            }
+        });
+
+        async function verifyPost() {
+            if (!currentTempSlug) return;
+            const totpInput = document.getElementById('totp-code');
+            const totpCode = totpInput ? totpInput.value.trim() : "";
+
+            if (!totpCode) {
+                showToast("Please enter 6-digit Google Authenticator code!", "error");
+                if (totpInput) totpInput.focus();
+                return;
+            }
+
+            const btn = document.getElementById('verify-btn');
+            btn.innerHTML = '<div class="spinner"></div> Verifying...';
+            btn.disabled = true;
+
+            try {
+                const res = await fetch(`${API_BASE}/admin/verify-post`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ ...getCreds(), wp_slug: currentTempSlug, totp_code: totpCode })
+                });
+                
+                const data = await res.json();
+
+                if (res.ok) {
+                    showToast("Verified! AI pipeline started.", "success");
+                    verifyBox.classList.add('hidden');
+                    if (totpInput) totpInput.value = "";
+                    currentTempSlug = "";
+                    setTimeout(loadBlogs, 1200);
+                } else {
+                    showToast(data.detail || "Verification failed.", "error");
+                }
+            } catch (err) {
+                showToast("Network Error", "error");
+            } finally {
+                btn.innerHTML = '<i class="fas fa-check-circle"></i> Verify & Process AI';
+                btn.disabled = false;
+            }
+        }
+
+        // ================= MANAGE BLOGS =================
+        async function loadBlogs() {
+            blogListEl.innerHTML = '<div class="text-center text-slate-500 py-14"><div class="spinner border-slate-300 border-t-slate-800 mb-3"></div><p class="text-sm font-medium">Loading your articles...</p></div>';
+            
+            try {
+                const res = await fetch(`${API_BASE}/admin/blogs`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(getCreds())
+                });
+                
+                if (res.ok) {
+                    const data = await res.json();
+                    allBlogsData = data.blogs;
+                    countBadge.textContent = `${allBlogsData.length} Articles`;
+                    filterBlogs();
+                } else {
+                    if (res.status === 401) logout();
+                    blogListEl.innerHTML = '<p class="text-red-500 text-center py-8 font-medium">Failed to load articles.</p>';
+                }
+            } catch (err) {
+                blogListEl.innerHTML = '<p class="text-red-500 text-center py-8 font-medium">Network error while loading articles.</p>';
+            }
+        }
+
+        function clearSearch() {
+            const input = document.getElementById('search-blog');
+            input.value = '';
+            filterBlogs();
+            input.focus();
+        }
+
+        function filterBlogs() {
+            const q = document.getElementById('search-blog').value.toLowerCase();
+            const clearBtn = document.getElementById('clear-search-btn');
+            if (q.length > 0) {
+                clearBtn.classList.remove('hidden');
+            } else {
+                clearBtn.classList.add('hidden');
+            }
+
+            const filtered = allBlogsData.filter(b => 
+                b.title.toLowerCase().includes(q) || b.wp_slug.toLowerCase().includes(q)
+            );
+            countBadge.textContent = `${filtered.length} of ${allBlogsData.length} Articles`;
+            renderBlogs(filtered);
+        }
+
+        function renderBlogs(blogs) {
+            if (blogs.length === 0) {
+                blogListEl.innerHTML = `
+                    <div class="text-center text-slate-400 py-14">
+                        <i class="fas fa-folder-open text-3xl mb-2 opacity-60"></i>
+                        <p class="text-sm font-medium">No matching articles found.</p>
+                    </div>`;
+                return;
+            }
+
+            let html = '';
+            blogs.forEach((b, index) => {
+                const safeTitle = b.title.replace(/"/g, '&quot;');
+                const safeDesc = b.seo_description ? b.seo_description.replace(/"/g, '&quot;') : '';
+                const safeSeoTitle = b.seo_title ? b.seo_title.replace(/"/g, '&quot;') : safeTitle;
+                const escapedSlug = b.wp_slug.replace(/'/g, "\'");
+
+                html += `
+                <div class="glass-card p-4 md:p-5 group">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+                        <div class="flex-grow pr-2 min-w-0">
+                            <h4 class="font-bold text-base md:text-lg leading-snug mb-1.5 text-slate-800 line-clamp-1" title="${safeTitle}">${safeTitle}</h4>
+                            <div class="flex flex-wrap items-center gap-2">
+                                <span class="text-xs bg-blue-50 text-blue-700 border border-blue-200/60 px-2.5 py-0.5 rounded-lg font-medium font-mono truncate max-w-xs">${b.wp_slug}</span>
+                                <a href="/${b.wp_slug}" target="_blank" class="text-xs text-slate-400 hover:text-blue-600 transition-colors inline-flex items-center gap-1 font-medium">
+                                    View Live <i class="fas fa-external-link-alt text-[10px]"></i>
+                                </a>
+                            </div>
+                        </div>
+
+                        <!-- Action Buttons: Copy/Download HTML, Edit SEO, Delete -->
+                        <div class="flex items-center gap-2 self-end sm:self-center shrink-0">
+                            <button onclick="exportAndCopyHTML('${escapedSlug}', ${index})" id="copy-btn-${index}" title="Copy Rich HTML for WordPress & Download .html File" class="btn-copy-html px-3.5 h-[38px] rounded-xl text-xs font-semibold inline-flex items-center gap-1.5 transition-all">
+                                <i class="fas fa-code"></i> <span>Copy & Download HTML</span>
+                            </button>
+                            <button onclick="toggleEdit(${index})" title="Edit SEO Title & Description" class="btn-action btn-edit">
+                                <i class="fas fa-sliders-h"></i>
+                            </button>
+                            <button onclick="deletePost('${escapedSlug}')" title="Delete Article Permanently" class="btn-action btn-danger">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Edit SEO Section (Hidden by default) -->
+                    <div id="edit-box-${index}" class="hidden mt-4 pt-4 border-t border-slate-200/70 space-y-3">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-500 mb-1">SEO Meta Title</label>
+                            <input type="text" id="seo-title-${index}" class="glass-input text-sm py-2" value="${safeSeoTitle}">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-500 mb-1">SEO Meta Description</label>
+                            <textarea id="seo-desc-${index}" class="glass-input text-sm py-2 h-20 resize-none">${safeDesc}</textarea>
+                        </div>
+                        <div class="flex justify-end gap-2 pt-1">
+                            <button onclick="toggleEdit(${index})" class="text-xs font-semibold text-slate-500 hover:text-slate-800 px-3 py-2 rounded-lg transition-colors">Cancel</button>
+                            <button onclick="saveSEO('${escapedSlug}', ${index})" id="save-btn-${index}" class="btn-apple text-xs py-2 px-4 shadow-sm">
+                                <i class="fas fa-save"></i> Save SEO
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                `;
+            });
+            blogListEl.innerHTML = html;
+        }
+
+        // ================= NEW: COPY RICH HTML + DOWNLOAD .HTML FILE =================
+        async function exportAndCopyHTML(slug, index) {
+            const btn = document.getElementById(`copy-btn-${index}`);
+            const originalHTML = btn.innerHTML;
+            btn.innerHTML = '<div class="spinner !w-3.5 !h-3.5"></div> <span>Preparing...</span>';
+            btn.disabled = true;
+
+            try {
+                const res = await fetch(`${API_BASE}/admin/export-blog-html`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ ...getCreds(), wp_slug: slug })
+                });
+
+                if (!res.ok) {
+                    throw new Error("Failed to fetch export HTML");
+                }
+
+                const data = await res.json();
+                const richHtml = data.rich_html;
+                const fullFileHtml = data.full_file_html;
+
+                // 1. Copy as Rich HTML + Plain HTML to Clipboard (So pasting into WordPress Visual OR Code Editor works seamlessly with images & formatting)
+                let copied = false;
+                if (navigator.clipboard && window.ClipboardItem) {
+                    try {
+                        const htmlBlob = new Blob([richHtml], { type: 'text/html' });
+                        const textBlob = new Blob([richHtml], { type: 'text/plain' });
+                        const clipboardItem = new ClipboardItem({
+                            'text/html': htmlBlob,
+                            'text/plain': textBlob
+                        });
+                        await navigator.clipboard.write([clipboardItem]);
+                        copied = true;
+                    } catch (clipErr) {
+                        console.warn("ClipboardItem fallback:", clipErr);
+                    }
+                }
+
+                // Fallback copy method if browser blocks ClipboardItem
+                if (!copied) {
+                    const tempContainer = document.createElement('div');
+                    tempContainer.innerHTML = richHtml;
+                    tempContainer.style.position = 'fixed';
+                    tempContainer.style.pointerEvents = 'none';
+                    tempContainer.style.opacity = '0';
+                    document.body.appendChild(tempContainer);
+
+                    const range = document.createRange();
+                    range.selectNodeContents(tempContainer);
+                    const selection = window.getSelection();
+                    selection.removeAllRanges();
+                    selection.addRange(range);
+                    document.execCommand('copy');
+                    selection.removeAllRanges();
+                    document.body.removeChild(tempContainer);
+                }
+
+                // 2. Automatically Download the standalone .html file
+                const fileBlob = new Blob([fullFileHtml], { type: 'text/html;charset=utf-8' });
+                const downloadUrl = URL.createObjectURL(fileBlob);
+                const a = document.createElement('a');
+                a.href = downloadUrl;
+                a.download = `${slug}.html`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                setTimeout(() => URL.revokeObjectURL(downloadUrl), 2000);
+
+                // Visual Success Feedback on Button
+                btn.innerHTML = '<i class="fas fa-check"></i> <span>Copied & Downloaded!</span>';
+                btn.classList.add('!bg-emerald-600', '!text-white');
+                showToast("HTML Copied to Clipboard & .html File Downloaded! Paste directly in WordPress.", "success");
+
+                setTimeout(() => {
+                    btn.innerHTML = originalHTML;
+                    btn.classList.remove('!bg-emerald-600', '!text-white');
+                    btn.disabled = false;
+                }, 2500);
+
+            } catch (err) {
+                console.error(err);
+                showToast("Error exporting HTML. Make sure main.py is updated!", "error");
+                btn.innerHTML = originalHTML;
+                btn.disabled = false;
+            }
+        }
+
+        function toggleEdit(index) {
+            const el = document.getElementById(`edit-box-${index}`);
+            el.classList.toggle('hidden');
+        }
+
+        async function saveSEO(slug, index) {
+            const title = document.getElementById(`seo-title-${index}`).value;
+            const desc = document.getElementById(`seo-desc-${index}`).value;
+            const btn = document.getElementById(`save-btn-${index}`);
+            
+            btn.innerHTML = '<div class="spinner !w-3.5 !h-3.5"></div>';
+            
+            try {
+                const res = await fetch(`${API_BASE}/admin/update-seo`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ ...getCreds(), wp_slug: slug, seo_title: title, seo_description: desc })
+                });
+                
+                if (res.ok) {
+                    showToast("SEO Updated Successfully!", "success");
+                    toggleEdit(index);
+                    
+                    const blog = allBlogsData.find(b => b.wp_slug === slug);
+                    if(blog) { blog.seo_title = title; blog.seo_description = desc; }
+                } else {
+                    showToast("Update failed.", "error");
+                }
+            } catch (err) {
+                showToast("Network Error", "error");
+            } finally {
+                btn.innerHTML = '<i class="fas fa-save"></i> Save SEO';
+            }
+        }
+
+        async function deletePost(slug) {
+            if (!confirm(`Are you absolutely sure you want to permanently delete '${slug}'? This cannot be undone.`)) return;
+            
+            try {
+                const res = await fetch(`${API_BASE}/admin/delete-post`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ ...getCreds(), wp_slug: slug })
+                });
+                
+                if (res.ok) {
+                    showToast("Post deleted permanently.", "success");
+                    allBlogsData = allBlogsData.filter(b => b.wp_slug !== slug);
+                    filterBlogs(); 
+                } else {
+                    showToast("Failed to delete post.", "error");
+                }
+            } catch (err) {
+                showToast("Network Error", "error");
+            }
+        }
+
+        // ================= UTILS =================
+        function getCreds() {
+            return {
+                username: localStorage.getItem("adminId"),
+                password: localStorage.getItem("adminPass")
+            };
+        }
+
+        function showToast(msg, type) {
+            const toast = document.getElementById('toast');
+            const icon = document.getElementById('toast-icon');
+            const msgEl = document.getElementById('toast-msg');
+            
+            msgEl.textContent = msg;
+            toast.className = `fixed bottom-6 right-6 glass-panel px-5 py-3.5 flex items-center gap-3 transform transition-all duration-300 z-50 shadow-2xl max-w-md`;
+            
+            if (type === 'success') {
+                icon.className = 'fas fa-check-circle text-emerald-500 text-xl';
+                toast.style.borderLeft = '4px solid #10b981';
+            } else if (type === 'error') {
+                icon.className = 'fas fa-exclamation-triangle text-red-500 text-xl';
+                toast.style.borderLeft = '4px solid #ef4444';
+            } else {
+                icon.className = 'fas fa-info-circle text-blue-500 text-xl';
+                toast.style.borderLeft = '4px solid #2563eb';
+            }
+            
+            toast.classList.remove('translate-y-24', 'opacity-0');
+            
+            setTimeout(() => {
+                toast.classList.add('translate-y-24', 'opacity-0');
+            }, 3500);
+        }
+    </script>
+</body>
+</html>
