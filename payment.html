@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Support & Plans - To The Point</title>
+    <meta name="description" content="Choose a subscription plan or make a custom contribution to To The Point.">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <!-- Razorpay Official Checkout JS -->
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap');
+        body { font-family: 'Quicksand', sans-serif; user-select: none; }
+        
+        /* Exact Glassmorphism Utilities from Blog UI */
+        .glass-nav { background: rgba(255, 255, 255, 0.2); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(255, 255, 255, 0.3); }
+        .glass-morphism { background: rgba(255, 255, 255, 0.75); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.6); box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1); transition: all 0.3s ease; }
+        .glass-card { background: rgba(255, 255, 255, 0.65); backdrop-filter: blur(16px); border: 2px solid rgba(255, 255, 255, 0.7); transition: all 0.3s ease; }
+        .glass-card:hover { transform: translateY(-5px); background: rgba(255, 255, 255, 0.88); box-shadow: 0 12px 40px 0 rgba(31, 38, 135, 0.15); }
+        
+        .selected-plan { border-color: #16a34a !important; background: rgba(240, 253, 244, 0.92) !important; box-shadow: 0 12px 35px 0 rgba(22, 163, 74, 0.2) !important; transform: translateY(-4px); }
+        .nature-gradient { background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 50%, #bbf7d0 100%); }
+    </style>
+</head>
+<body class="nature-gradient min-h-screen text-gray-800">
+
+    <!-- Navbar (Exact Match with Blog Page) -->
+    <nav class="fixed w-full z-50 glass-nav top-0">
+        <div class="max-w-5xl mx-auto px-6 py-3 flex justify-between items-center">
+            <a href="https://www.pranavblog.online/home" class="flex items-center gap-3 w-fit hover:opacity-80 transition-opacity">
+                <i class="fas fa-leaf text-green-700 text-2xl"></i>
+                <div class="flex flex-col">
+                    <span class="font-bold text-2xl text-green-900 leading-none">To The Point</span>
+                    <span class="text-[0.65rem] font-semibold text-green-700 tracking-wider uppercase mt-1">Environment Energy and Agriculture</span>
+                </div>
+            </a>
+            <a href="/" class="text-sm font-bold text-green-800 hover:text-green-600 flex items-center gap-2">
+                <i class="fas fa-arrow-left"></i> Home
+            </a>
+        </div>
+    </nav>
+
+    <main class="pt-28 pb-16 px-4 md:px-6 max-w-4xl mx-auto min-h-screen flex flex-col justify-center">
+
+        <div class="glass-morphism rounded-3xl p-6 md:p-10 mb-8">
+            <header class="text-center mb-8 border-b border-green-100 pb-6">
+                <span class="bg-green-100 text-green-800 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">Instant Access & Checkout</span>
+                <h1 class="text-2xl md:text-4xl font-bold text-green-950 leading-tight mt-3 mb-2">Choose Your Plan</h1>
+                <p class="text-gray-600 text-sm md:text-base">Select one of our curated plans below or enter a custom amount to proceed with payment.</p>
+            </header>
+
+            <!-- 3 Fixed Plans Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-5 mb-8">
+                
+                <!-- Plan 1: 1 Week for ₹15 -->
+                <div id="plan-1week" onclick="selectPlan('1week', 15, '1 Week Pass')" class="glass-card rounded-2xl p-6 cursor-pointer flex flex-col justify-between relative">
+                    <div>
+                        <div class="flex justify-between items-center mb-3">
+                            <span class="text-xs font-bold uppercase tracking-wider text-green-700 bg-green-100 px-2.5 py-1 rounded-lg">Starter</span>
+                            <i id="icon-1week" class="far fa-circle text-green-600 text-xl"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-green-950 mb-1">1 Week Plan</h3>
+                        <p class="text-xs text-gray-500 mb-4">7 days full access test pass</p>
+                    </div>
+                    <div class="border-t border-green-100 pt-4 mt-2">
+                        <span class="text-3xl font-bold text-green-900">₹15</span>
+                        <span class="text-xs text-gray-500 font-semibold">/ 1 week</span>
+                    </div>
+                </div>
+
+                <!-- Plan 2: 1 Month for ₹40 -->
+                <div id="plan-1month" onclick="selectPlan('1month', 40, '1 Month Plan')" class="glass-card selected-plan rounded-2xl p-6 cursor-pointer flex flex-col justify-between relative">
+                    <div class="absolute -top-3 right-4 bg-green-600 text-white text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full shadow">Popular</div>
+                    <div>
+                        <div class="flex justify-between items-center mb-3">
+                            <span class="text-xs font-bold uppercase tracking-wider text-green-700 bg-green-100 px-2.5 py-1 rounded-lg">Monthly</span>
+                            <i id="icon-1month" class="fas fa-check-circle text-green-600 text-xl"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-green-950 mb-1">1 Month Plan</h3>
+                        <p class="text-xs text-gray-500 mb-4">30 days standard plan</p>
+                    </div>
+                    <div class="border-t border-green-100 pt-4 mt-2">
+                        <span class="text-3xl font-bold text-green-900">₹40</span>
+                        <span class="text-xs text-gray-500 font-semibold">/ 1 month</span>
+                    </div>
+                </div>
+
+                <!-- Plan 3: 3 Months for ₹100 -->
+                <div id="plan-3month" onclick="selectPlan('3month', 100, '3 Months Plan')" class="glass-card rounded-2xl p-6 cursor-pointer flex flex-col justify-between relative">
+                    <div>
+                        <div class="flex justify-between items-center mb-3">
+                            <span class="text-xs font-bold uppercase tracking-wider text-green-700 bg-green-100 px-2.5 py-1 rounded-lg">Best Value</span>
+                            <i id="icon-3month" class="far fa-circle text-green-600 text-xl"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-green-950 mb-1">3 Months Plan</h3>
+                        <p class="text-xs text-gray-500 mb-4">90 days complete access</p>
+                    </div>
+                    <div class="border-t border-green-100 pt-4 mt-2">
+                        <span class="text-3xl font-bold text-green-900">₹100</span>
+                        <span class="text-xs text-gray-500 font-semibold">/ 3 months</span>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Custom Payment Option -->
+            <div id="plan-custom" onclick="selectCustomPlan()" class="glass-card rounded-2xl p-6 mb-8 cursor-pointer">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                    <div class="flex items-start gap-3">
+                        <i id="icon-custom" class="far fa-circle text-green-600 text-xl mt-1"></i>
+                        <div>
+                            <h3 class="text-lg font-bold text-green-950">Custom Payment Amount</h3>
+                            <p class="text-xs text-gray-600">Apne hisaab se koi bhi custom amount enter karein aur checkout karein.</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center bg-white/90 border-2 border-green-200 rounded-xl px-4 py-2 w-full md:w-64 focus-within:border-green-600 transition">
+                        <span class="text-green-900 font-bold text-lg mr-2">₹</span>
+                        <input type="number" id="customAmountInput" min="1" placeholder="Enter Amount (e.g. 25)" 
+                               class="w-full bg-transparent outline-none font-bold text-green-950 text-lg"
+                               oninput="handleCustomAmountTyping(this.value)">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Checkout Action Box -->
+            <div class="bg-green-50/80 border border-green-200 rounded-2xl p-6 flex flex-col md:flex-row items-center justify-between gap-4">
+                <div>
+                    <span class="text-xs font-bold uppercase tracking-wider text-green-700">Selected Option</span>
+                    <div class="flex items-baseline gap-2 mt-1">
+                        <h4 id="summaryPlanName" class="text-xl font-bold text-green-950">1 Month Plan</h4>
+                        <span class="text-green-700 font-bold">—</span>
+                        <span id="summaryAmount" class="text-2xl font-bold text-green-700">₹40</span>
+                    </div>
+                </div>
+
+                <button id="payNowBtn" onclick="initiatePayment()" class="w-full md:w-auto bg-green-600 hover:bg-green-700 text-white font-bold py-3.5 px-8 rounded-xl shadow-lg hover:shadow-xl transition flex items-center justify-center gap-2 text-base">
+                    <i class="fas fa-lock text-sm"></i>
+                    <span id="payBtnText">Proceed to Pay ₹40</span>
+                </button>
+            </div>
+
+            <!-- Generated Payment Link Box (Optional Direct Link) -->
+            <div id="paymentLinkBox" class="hidden mt-4 p-4 rounded-xl bg-white/80 border border-green-200 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs">
+                <span class="text-gray-700 font-medium"><i class="fas fa-link text-green-600 mr-1"></i> Direct Razorpay Payment Link Generated:</span>
+                <a id="generatedLinkAnchor" href="#" target="_blank" class="text-green-700 font-bold underline break-all"></a>
+            </div>
+
+            <!-- Payment Status Notification Box -->
+            <div id="paymentStatusBox" class="hidden mt-6 p-6 rounded-2xl text-center transition-all"></div>
+        </div>
+
+    </main>
+
+    <script>
+        let currentPlanId = '1month';
+        let currentAmount = 40;
+        let currentPlanName = '1 Month Plan';
+
+        function updateUI() {
+            const plans = ['1week', '1month', '3month', 'custom'];
+            plans.forEach(p => {
+                const card = document.getElementById(`plan-${p}`);
+                const icon = document.getElementById(`icon-${p}`);
+                if (p === currentPlanId) {
+                    card.classList.add('selected-plan');
+                    icon.className = 'fas fa-check-circle text-green-600 text-xl';
+                } else {
+                    card.classList.remove('selected-plan');
+                    icon.className = 'far fa-circle text-green-600 text-xl';
+                }
+            });
+
+            document.getElementById('summaryPlanName').innerText = currentPlanName;
+            document.getElementById('summaryAmount').innerText = `₹${currentAmount || 0}`;
+            document.getElementById('payBtnText').innerText = `Proceed to Pay ₹${currentAmount || 0}`;
+        }
+
+        function selectPlan(planId, amount, planName) {
+            currentPlanId = planId;
+            currentAmount = amount;
+            currentPlanName = planName;
+            document.getElementById('customAmountInput').value = '';
+            updateUI();
+        }
+
+        function selectCustomPlan() {
+            currentPlanId = 'custom';
+            currentPlanName = 'Custom Payment';
+            const val = parseFloat(document.getElementById('customAmountInput').value);
+            currentAmount = (!isNaN(val) && val >= 1) ? val : 0;
+            updateUI();
+            document.getElementById('customAmountInput').focus();
+        }
+
+        function handleCustomAmountTyping(val) {
+            currentPlanId = 'custom';
+            currentPlanName = 'Custom Payment';
+            const parsed = parseFloat(val);
+            currentAmount = (!isNaN(parsed) && parsed >= 1) ? parsed : 0;
+            updateUI();
+        }
+
+        function showStatusMessage(type, title, details) {
+            const box = document.getElementById('paymentStatusBox');
+            box.classList.remove('hidden');
+            if (type === 'success') {
+                box.className = 'mt-6 p-6 rounded-2xl text-center bg-green-100 border-2 border-green-500 text-green-950';
+                box.innerHTML = `
+                    <i class="fas fa-check-circle text-4xl text-green-600 mb-2"></i>
+                    <h3 class="text-xl font-bold">${title}</h3>
+                    <p class="text-sm text-green-800 mt-1">${details}</p>
+                `;
+            } else {
+                box.className = 'mt-6 p-6 rounded-2xl text-center bg-red-50 border-2 border-red-400 text-red-900';
+                box.innerHTML = `
+                    <i class="fas fa-times-circle text-4xl text-red-500 mb-2"></i>
+                    <h3 class="text-xl font-bold">${title}</h3>
+                    <p class="text-sm text-red-700 mt-1">${details}</p>
+                `;
+            }
+        }
+
+        async function initiatePayment() {
+            if (!currentAmount || currentAmount < 1) {
+                alert("Kripya kam se kam ₹1 ya usse zyada ka amount select/enter karein!");
+                return;
+            }
+
+            const btn = document.getElementById('payNowBtn');
+            const btnText = document.getElementById('payBtnText');
+            btn.disabled = true;
+            btnText.innerText = "Creating Order...";
+            document.getElementById('paymentStatusBox').classList.add('hidden');
+
+            try {
+                // Step 1: Server se Razorpay Order aur Payment Link banwayein
+                const res = await fetch('/api/payment/create-order', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        amount: currentAmount,
+                        plan_name: currentPlanName
+                    })
+                });
+
+                const orderData = await res.json();
+                if (!res.ok || orderData.status !== 'success') {
+                    throw new Error(orderData.detail || "Order create nahi ho paya");
+                }
+
+                // Agar server ne shareable Payment Link bhi diya hai toh UI me dikha do
+                if (orderData.payment_link) {
+                    const linkBox = document.getElementById('paymentLinkBox');
+                    const linkAnchor = document.getElementById('generatedLinkAnchor');
+                    linkBox.classList.remove('hidden');
+                    linkAnchor.href = orderData.payment_link;
+                    linkAnchor.innerText = orderData.payment_link;
+                }
+
+                // Step 2: Razorpay Live Checkout Open Karein
+                const options = {
+                    "key": orderData.key_id,
+                    "amount": orderData.amount,
+                    "currency": orderData.currency,
+                    "name": "To The Point",
+                    "description": orderData.plan_name,
+                    "image": "/author.webp",
+                    "order_id": orderData.order_id,
+                    "handler": async function (response) {
+                        // Step 3: Payment hone ke baad Backend se Signature Verify karwayein
+                        btnText.innerText = "Verifying Payment...";
+                        try {
+                            const verifyRes = await fetch('/api/payment/verify', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({
+                                    razorpay_order_id: response.razorpay_order_id,
+                                    razorpay_payment_id: response.razorpay_payment_id,
+                                    razorpay_signature: response.razorpay_signature
+                                })
+                            });
+
+                            const verifyData = await verifyRes.json();
+                            if (verifyRes.ok && verifyData.status === 'success') {
+                                showStatusMessage(
+                                    'success',
+                                    'Payment Successful & Verified! 🎉',
+                                    `Plan: ${currentPlanName} (₹${currentAmount}) | Payment ID: ${verifyData.payment_id} | Order ID: ${verifyData.order_id}`
+                                );
+                            } else {
+                                showStatusMessage('error', 'Verification Failed', verifyData.detail || 'Signature match nahi hua.');
+                            }
+                        } catch (err) {
+                            showStatusMessage('error', 'Verification Error', err.message);
+                        } finally {
+                            btn.disabled = false;
+                            btnText.innerText = `Proceed to Pay ₹${currentAmount}`;
+                        }
+                    },
+                    "modal": {
+                        "ondismiss": function () {
+                            btn.disabled = false;
+                            btnText.innerText = `Proceed to Pay ₹${currentAmount}`;
+                        }
+                    },
+                    "theme": {
+                        "color": "#16a34a"
+                    }
+                };
+
+                const rzp = new Razorpay(options);
+                rzp.on('payment.failed', function (response) {
+                    showStatusMessage(
+                        'error',
+                        'Payment Failed',
+                        response.error.description || 'Transaction incomplete raha.'
+                    );
+                    btn.disabled = false;
+                    btnText.innerText = `Proceed to Pay ₹${currentAmount}`;
+                });
+                rzp.open();
+
+            } catch (error) {
+                showStatusMessage('error', 'Error', error.message);
+                btn.disabled = false;
+                btnText.innerText = `Proceed to Pay ₹${currentAmount}`;
+            }
+        }
+    </script>
+</body>
+</html>
